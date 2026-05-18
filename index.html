@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- =========================================================
+    PAINTING WITH LESTER — NEXT LEVEL STATIC SITE
+    GitHub Pages ready: one HTML file, no database, no build tools.
+    Concept: premium studio table + clean interactive painter palette.
+  ========================================================== -->
+
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Painting With Lester — original paintings, prints, artist tools, and colorful creative energy." />
+  <link rel="stylesheet" href="css/style.css">
+  <title>Painting With Lester | Interactive Palette Studio</title>
+
+</head>
+
+<body>
+  <header class="topbar">
+    <div class="site-shell topbar-inner">
+      <a class="brand" href="#" onclick="switchSection('home')" aria-label="Painting With Lester home">
+        <span class="brand-mark">🎨</span>
+        <span>Painting With Lester</span>
+      </a>
+      <nav class="socials" aria-label="Social media links">
+        <a href="https://www.youtube.com/@PaintingWithLester" target="_blank" rel="noreferrer">YouTube</a>
+        <a href="https://tiktok.com/@lestermaurerthepainter" target="_blank" rel="noreferrer">TikTok</a>
+        <a href="https://www.instagram.com/lester.maurer" target="_blank" rel="noreferrer">Instagram</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="palette-stage">
+    <div class="site-shell studio-layout">
+      <aside class="palette-panel" aria-label="Interactive paint palette navigation">
+        <p class="palette-kicker">Choose your color</p>
+        <div class="main-palette" id="mainPalette">
+          <button class="paint-well well-home active" data-section="home" data-label="Home" aria-label="Home section">🏠</button>
+          <button class="paint-well well-gallery" data-section="gallery" data-label="Gallery" aria-label="Gallery section">🖼️</button>
+          <button class="paint-well well-shop" data-section="shop" data-label="Shop" aria-label="Shop section">🛒</button>
+          <button class="paint-well well-tools" data-section="tools" data-label="Tools" aria-label="Artist tools section">🎨</button>
+          <button class="paint-well well-about" data-section="about" data-label="About" aria-label="About Lester section">👨‍🎨</button>
+          <button class="paint-well well-socials" data-section="socials" data-label="Socials" aria-label="Social links section">📣</button>
+          <div class="palette-core">PWL</div>
+        </div>
+        <p class="palette-help">A cleaner interactive palette: fewer distractions, bigger moments, and each color opens a focused part of Lester’s studio.</p>
+        <div class="mini-status">
+          <div class="status-pill"><span>Originals</span><strong>Ship</strong></div>
+          <div class="status-pill"><span>Prints</span><strong>Order</strong></div>
+          <div class="status-pill"><span>Forms</span><strong>Email</strong></div>
+        </div>
+      </aside>
+
+      <section class="canvas-wrap" aria-live="polite">
+        <div class="content-canvas" id="contentCanvas"></div>
+      </section>
+    </div>
+  </main>
+
+        <script src="js/script.js"></script>
+</body>
+</html>
