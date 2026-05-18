@@ -1,7 +1,7 @@
 # painting_with_lester_V1
 Website for the Artist known as "Lester" a one of a kind creature from the planet Whiteaker. 
 
-👀 Watch Site Being Built As Changes Happen: 
+👀 Watch Site Being Built As Changes Happen: https://geoffstengel.github.io/painting_with_lester_V1/
 
 🗺️ Site Map: ✅ index.html Is Main Landing Page
 
