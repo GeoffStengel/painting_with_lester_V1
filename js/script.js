@@ -1,7 +1,8 @@
 /* /=== CONFIG START ===/ */
-const ORDER_EMAIL = "orders@paintingwithlester.com";
-
+const ORDER_EMAIL = "orders@paintingwithlester.com"; // TODO: replace before launch
 const LOCAL_DISCOUNT_ZIPS = ["00000", "12345", "90210"];
+
+let cart = [];
 
 const products = [
   {
@@ -12,9 +13,10 @@ const products = [
     price: 950,
     size: "24 × 36 in",
     available: true,
-    fulfillment: "Ships directly from Lester or can be arranged for local pickup.",
-    bg: "linear-gradient(135deg,#e63946,#fcbf49,#f77f00)",
+    fulfillment: "Ships directly from Lester or local pickup can be arranged.",
+    image: "https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?auto=format&fit=crop&w=900&q=80",
     description: "Bold warm acrylic movement with layered texture.",
+    maxQty: 1,
     printOptions: []
   },
   {
@@ -25,15 +27,11 @@ const products = [
     price: 65,
     size: "Select size",
     available: true,
-    fulfillment: "Lester orders this from the print company after confirming the order.",
-    bg: "linear-gradient(135deg,#277da1,#7b2cbf,#201510)",
+    fulfillment: "Ordered from the print company after customer confirmation.",
+    image: "https://images.unsplash.com/photo-1578301978693-85fa9c0320b9?auto=format&fit=crop&w=900&q=80",
     description: "Museum-style print with dreamy blue movement.",
-    printOptions: [
-      { label: "8 × 10 in", price: 45 },
-      { label: "12 × 18 in", price: 65 },
-      { label: "16 × 20 in", price: 85 },
-      { label: "24 × 36 in", price: 145 }
-    ]
+    maxQty: 10,
+    printOptions: []
   },
   {
     id: "garden-wall-rhythm",
@@ -43,15 +41,11 @@ const products = [
     price: 65,
     size: "Select size",
     available: true,
-    fulfillment: "Lester orders this from the print company after confirming the order.",
-    bg: "linear-gradient(135deg,#2a9d8f,#277da1,#fcbf49)",
+    fulfillment: "Ordered from the print company after customer confirmation.",
+    image: "https://images.unsplash.com/photo-1541961017774-22349e4a1262?auto=format&fit=crop&w=900&q=80",
     description: "Colorful, playful print with soft brush motion.",
-    printOptions: [
-      { label: "8 × 10 in", price: 45 },
-      { label: "12 × 18 in", price: 65 },
-      { label: "16 × 20 in", price: 85 },
-      { label: "24 × 36 in", price: 145 }
-    ]
+    maxQty: 10,
+    printOptions: []
   },
   {
     id: "neighborhood-light-original",
@@ -61,18 +55,13 @@ const products = [
     price: 1200,
     size: "30 × 40 in",
     available: true,
-    fulfillment: "Ships directly from Lester or can be arranged for local pickup.",
-    bg: "linear-gradient(135deg,#f77f00,#e63946,#7b2cbf)",
+    fulfillment: "Ships directly from Lester or local pickup can be arranged.",
+    image: "https://images.unsplash.com/photo-1578926375605-eaf7559b1458?auto=format&fit=crop&w=900&q=80",
     description: "One-of-one statement piece full of local color.",
+    maxQty: 1,
     printOptions: []
   }
 ];
-
-const DISCOUNT_CODES = {
-  LOCAL10: { rate: 0.1, reason: "10% local neighborhood discount" },
-  ARTIST10: { rate: 0.1, reason: "10% artist community discount" },
-  LESTER15: { rate: 0.15, reason: "15% special Lester print discount" }
-};
 /* /=== CONFIG END ===/ */
 
 
@@ -90,24 +79,16 @@ function safeScrollTop() {
   $("#contentCanvas")?.scrollTo({ top: 0, behavior: "instant" });
 }
 
-function getSelectedProduct() {
-  const select = $("#productSelect");
-  return products.find((product) => product.id === select?.value) || products[0];
+function getProduct(productId) {
+  return products.find((product) => product.id === productId);
 }
 
-function getDiscount(product) {
-  const zip = $("#zipCode")?.value.trim() || "";
-  const isLocal = $("#isLocal")?.checked || LOCAL_DISCOUNT_ZIPS.includes(zip);
-  const isArtist = $("#isArtist")?.checked;
+function getCartTotal() {
+  return cart.reduce((total, item) => total + item.price * item.quantity, 0);
+}
 
-  if (product.type !== "Fine Art Print") {
-    return { rate: 0, reason: "Discounts apply to prints only." };
-  }
-
-  if (isLocal) return { rate: 0.15, reason: "15% neighborhood local print discount." };
-  if (isArtist) return { rate: 0.1, reason: "10% artist community print discount." };
-
-  return { rate: 0, reason: "No discount selected." };
+function getCartCount() {
+  return cart.reduce((total, item) => total + item.quantity, 0);
 }
 /* /=== HELPERS END ===/ */
 
@@ -164,10 +145,10 @@ const sections = {
       <section class="shop-hero">
         <div>
           <h2>Shop</h2>
-          <p>Original paintings, fine art prints, and artist tools created to inspire.</p>
+          <p>Original paintings and fine art prints from Lester’s studio.</p>
         </div>
 
-        <button class="cart-pill" type="button">
+        <button class="cart-pill" type="button" onclick="showCart()">
           🛒 Cart <span id="cartCount">0</span>
           <strong id="cartTotalMini">$0.00</strong>
         </button>
@@ -178,7 +159,6 @@ const sections = {
           <button class="shop-tab active" data-filter="all">All Items</button>
           <button class="shop-tab" data-filter="Original Painting">Original Paintings</button>
           <button class="shop-tab" data-filter="Fine Art Print">Fine Art Prints</button>
-          <button class="shop-tab" data-filter="Artist Tool">Artist Tools</button>
         </div>
 
         <select id="shopSort">
@@ -191,50 +171,8 @@ const sections = {
       <section class="shop-grid mockup-shop-grid" id="shopGrid"></section>
 
       <div class="shipping-banner">
-        🚚 Free shipping on orders over $100 within the U.S.
+        Checkout happens through the cart so Lester receives one clean email order sheet.
       </div>
-
-      <form class="order-form" id="orderForm">
-        <h3 style="margin:0;">Order Sheet</h3>
-
-        <label for="productSelect">Selected artwork</label>
-        <select id="productSelect" required></select>
-
-        <label for="customerName">Customer name</label>
-        <input id="customerName" autocomplete="name" required placeholder="Customer name" />
-
-        <label for="customerEmail">Customer email</label>
-        <input id="customerEmail" type="email" autocomplete="email" required placeholder="customer@email.com" />
-
-        <label for="customerPhone">Phone</label>
-        <input id="customerPhone" autocomplete="tel" placeholder="Optional" />
-
-        <label for="shippingAddress">Shipping address</label>
-        <textarea id="shippingAddress" rows="3" required placeholder="Street address, apartment, etc."></textarea>
-
-        <label for="cityStateZip">City / State / ZIP</label>
-        <input id="cityStateZip" required placeholder="City, ST 12345" />
-
-        <label for="zipCode">ZIP for local discount check</label>
-        <input id="zipCode" inputmode="numeric" placeholder="12345" />
-
-        <label class="check-row">
-          <input type="checkbox" id="isLocal" />
-          <span>Customer is local to the neighborhood</span>
-        </label>
-
-        <label class="check-row">
-          <input type="checkbox" id="isArtist" />
-          <span>Customer is an artist / painter</span>
-        </label>
-
-        <label for="notes">Order notes</label>
-        <textarea id="notes" rows="3" placeholder="Frame request, pickup question, delivery note, etc."></textarea>
-
-        <div class="total-box" id="totalBox"></div>
-
-        <button class="btn btn-primary" type="submit">Create Email Order Sheet</button>
-      </form>
     </div>
   `,
 
@@ -307,6 +245,7 @@ const sections = {
 /* /=== SECTION SWITCHING START ===/ */
 function switchSection(sectionName) {
   const canvas = $("#contentCanvas");
+  if (!canvas) return;
 
   canvas.innerHTML = sections[sectionName] ? sections[sectionName]() : sections.home();
 
@@ -318,20 +257,244 @@ function switchSection(sectionName) {
 
   if (sectionName === "shop") initShop();
   if (sectionName === "tools") initTools();
+
+  updateCartUI();
 }
 /* /=== SECTION SWITCHING END ===/ */
+
+
+/* /=== CART LOGIC START ===/ */
+function addToCart(productId) {
+  const product = getProduct(productId);
+  if (!product) return;
+
+  const existingItem = cart.find((item) => item.id === productId);
+  const maxQty = product.maxQty || 99;
+
+  if (existingItem) {
+    if (existingItem.quantity >= maxQty) return;
+    existingItem.quantity += 1;
+  } else {
+    cart.push({
+      id: product.id,
+      title: product.title,
+      type: product.type,
+      price: product.price,
+      size: product.size,
+      image: product.image,
+      quantity: 1,
+      maxQty
+    });
+  }
+
+  updateCartUI();
+}
+
+function removeFromCart(productId) {
+  cart = cart.filter((item) => item.id !== productId);
+  updateCartUI();
+  showCart();
+}
+
+function updateCartQuantity(productId, amount) {
+  const item = cart.find((cartItem) => cartItem.id === productId);
+  if (!item) return;
+
+  const maxQty = item.maxQty || 99;
+  item.quantity = Math.min(maxQty, Math.max(1, item.quantity + amount));
+
+  updateCartUI();
+  showCart();
+}
+
+function updateCartUI() {
+  const count = getCartCount();
+  const total = money(getCartTotal());
+
+  const cartCount = $("#cartCount");
+  const cartTotalMini = $("#cartTotalMini");
+  const floatingCartCount = $("#floatingCartCount");
+  const floatingCartTotal = $("#floatingCartTotal");
+
+  if (cartCount) cartCount.textContent = String(count);
+  if (cartTotalMini) cartTotalMini.textContent = total;
+
+  if (floatingCartCount) {
+    floatingCartCount.textContent = `${count} item${count !== 1 ? "s" : ""}`;
+  }
+
+  if (floatingCartTotal) {
+    floatingCartTotal.textContent = total;
+  }
+}
+
+function showCart() {
+  $("#contentCanvas").innerHTML = `
+    <div class="cart-page">
+      <button class="back-to-shop" type="button" onclick="switchSection('shop')">
+        ← Back to Shop
+      </button>
+
+      <h2 class="section-heading">Your Cart</h2>
+
+      ${
+        cart.length === 0
+          ? `<p class="section-copy">Your cart is empty.</p>`
+          : `
+            <div class="cart-layout">
+              <section class="cart-items">
+                ${cart.map((item) => {
+                  const isAtMax = item.quantity >= (item.maxQty || 99);
+
+                  return `
+                    <article class="cart-item">
+                      <div class="cart-item-image" style="background-image:url('${item.image}');"></div>
+
+                      <div>
+                        <h3>${item.title}</h3>
+                        <p>${item.type} · ${item.size}</p>
+                        <strong>${money(item.price)} each</strong>
+                        ${item.maxQty === 1 ? `<small>One-of-one original</small>` : `<small>Max quantity: ${item.maxQty}</small>`}
+                      </div>
+
+                      <div class="cart-qty">
+                        <button type="button" onclick="updateCartQuantity('${item.id}', -1)">−</button>
+                        <span>${item.quantity}</span>
+                        <button type="button" onclick="updateCartQuantity('${item.id}', 1)" ${isAtMax ? "disabled" : ""}>+</button>
+                      </div>
+
+                      <button class="cart-remove" type="button" onclick="removeFromCart('${item.id}')">×</button>
+                    </article>
+                  `;
+                }).join("")}
+              </section>
+
+              <aside class="cart-summary">
+                <h3>Order Summary</h3>
+                <div><span>Items</span><strong>${getCartCount()}</strong></div>
+                <div><span>Subtotal</span><strong>${money(getCartTotal())}</strong></div>
+                <div><span>Shipping</span><strong>Confirm by email</strong></div>
+                <div class="cart-total"><span>Total</span><strong>${money(getCartTotal())}</strong></div>
+
+                <button class="btn btn-primary" type="button" onclick="showCheckout()">
+                  Continue to Order Sheet
+                </button>
+              </aside>
+            </div>
+          `
+      }
+    </div>
+  `;
+
+  safeScrollTop();
+  updateCartUI();
+}
+/* /=== CART LOGIC END ===/ */
+
+
+/* /=== PRODUCT DETAIL VIEW START ===/ */
+function showProductDetail(productId) {
+  const product = getProduct(productId);
+  if (!product) return;
+
+  $("#contentCanvas").innerHTML = `
+    <div class="product-detail-page">
+      <button class="back-to-shop" type="button" onclick="switchSection('shop')">
+        ← Back to Shop
+      </button>
+
+      <section class="product-detail-grid">
+        <div class="detail-gallery">
+          <div class="detail-main-image" style="background-image:url('${product.image}');"></div>
+
+          <div class="detail-thumbs">
+            <button style="background-image:url('${product.image}');" type="button"></button>
+            <button style="background-image:url('${product.image}'); filter:saturate(.7);" type="button"></button>
+            <button style="background-image:url('${product.image}'); filter:sepia(.25);" type="button"></button>
+          </div>
+        </div>
+
+        <div class="detail-info">
+          <span class="detail-type">${product.type}</span>
+          <h2>${product.title}</h2>
+          <p>${product.description}</p>
+
+          <ul class="detail-list">
+            <li><strong>Size:</strong> ${product.size}</li>
+            <li><strong>Availability:</strong> ${product.available ? "Available" : "Unavailable"}</li>
+            <li><strong>Starting Price:</strong> ${money(product.price)}</li>
+            <li><strong>Max Qty:</strong> ${product.maxQty}</li>
+          </ul>
+
+          <div class="detail-qty-row">
+            <button type="button" onclick="adjustDetailQty(-1)">−</button>
+            <input id="detailQty" type="number" min="1" max="${product.maxQty}" value="1" />
+            <button type="button" onclick="adjustDetailQty(1, ${product.maxQty})">+</button>
+          </div>
+
+          <button class="btn btn-primary detail-add-btn" type="button" onclick="addDetailItemToCart('${product.id}')">
+            Add to Cart
+          </button>
+        </div>
+
+        <aside class="detail-order-box">
+          <h3>Order Notes</h3>
+          <p>${product.fulfillment}</p>
+
+          <div class="detail-note">
+            <strong>Originals</strong>
+            <span>Original paintings are one-of-one and limited to one per order.</span>
+          </div>
+
+          <div class="detail-note">
+            <strong>Prints</strong>
+            <span>Prints can have limited quantities based on Lester’s chosen edition size.</span>
+          </div>
+
+          <div class="detail-note">
+            <strong>Discounts</strong>
+            <span>Local and artist discounts can be reviewed before final confirmation.</span>
+          </div>
+        </aside>
+      </section>
+    </div>
+  `;
+
+  safeScrollTop();
+  updateCartUI();
+}
+
+function adjustDetailQty(amount, maxQty = 99) {
+  const input = $("#detailQty");
+  if (!input) return;
+
+  const currentValue = Number(input.value) || 1;
+  input.value = Math.min(maxQty, Math.max(1, currentValue + amount));
+}
+
+function addDetailItemToCart(productId) {
+  const product = getProduct(productId);
+  if (!product) return;
+
+  const qty = Number($("#detailQty")?.value) || 1;
+  const maxQty = product.maxQty || 99;
+  const safeQty = Math.min(qty, maxQty);
+
+  for (let i = 0; i < safeQty; i += 1) {
+    addToCart(productId);
+  }
+
+  showCart();
+}
+/* /=== PRODUCT DETAIL VIEW END ===/ */
 
 
 /* /=== SHOP START ===/ */
 function initShop() {
   const shopGrid = $("#shopGrid");
-  const productSelect = $("#productSelect");
+  if (!shopGrid) return;
 
   renderShopProducts(products);
-
-  productSelect.innerHTML = products
-    .map((product) => `<option value="${product.id}">${product.title} — ${product.type} — ${money(product.price)}</option>`)
-    .join("");
 
   document.querySelectorAll(".shop-tab").forEach((tab) => {
     tab.addEventListener("click", () => {
@@ -339,36 +502,39 @@ function initShop() {
       tab.classList.add("active");
 
       const filter = tab.dataset.filter;
-      const filteredProducts = filter === "all"
-        ? products
-        : products.filter((product) => product.type === filter);
+      const filteredProducts =
+        filter === "all"
+          ? products
+          : products.filter((product) => product.type === filter);
 
       renderShopProducts(filteredProducts);
+      updateCartUI();
     });
   });
 
-  $("#shopSort").addEventListener("change", (event) => {
+  $("#shopSort")?.addEventListener("change", (event) => {
     const sorted = [...products];
 
     if (event.target.value === "low") sorted.sort((a, b) => a.price - b.price);
     if (event.target.value === "high") sorted.sort((a, b) => b.price - a.price);
 
     renderShopProducts(sorted);
+    updateCartUI();
   });
 
-  ["#productSelect", "#zipCode", "#isLocal", "#isArtist"].forEach((selector) => {
-    $(selector).addEventListener("input", updateTotal);
-    $(selector).addEventListener("change", updateTotal);
-  });
-
-  $("#orderForm").addEventListener("submit", buildOrderEmail);
-
-  updateTotal();
+  updateCartUI();
 
   function renderShopProducts(productList) {
     shopGrid.innerHTML = productList.map((product) => `
       <article class="product-card">
-        <div class="product-art" data-type="${product.type}" style="--bg-art:${product.bg};"></div>
+        <button
+          class="product-art product-image-button"
+          data-type="${product.type}"
+          style="background-image:url('${product.image}');"
+          onclick="showProductDetail('${product.id}')"
+          type="button"
+          aria-label="View ${product.title} details">
+        </button>
 
         <div class="product-body">
           <h3>${product.title}</h3>
@@ -379,68 +545,115 @@ function initShop() {
             <span class="price">${money(product.price)}</span>
           </div>
 
-          <p class="section-copy">
-            <strong>${product.type}</strong><br>
-            ${product.fulfillment}
-          </p>
+          <div class="product-footer-meta">
+            <span>${product.type}</span>
+          </div>
 
-          <button class="btn btn-primary btn-small" data-product="${product.id}" type="button">
-            Select Piece
+          <button class="btn btn-primary btn-small" onclick="addToCart('${product.id}')" type="button">
+            Add to Cart
           </button>
         </div>
       </article>
     `).join("");
-
-    document.querySelectorAll("[data-product]").forEach((button) => {
-      button.addEventListener("click", () => {
-        productSelect.value = button.dataset.product;
-        updateTotal();
-        $("#orderForm").scrollIntoView({ behavior: "smooth", block: "start" });
-      });
-    });
   }
 }
+/* /=== SHOP END ===/ */
 
-function updateTotal() {
-  const product = getSelectedProduct();
-  const discount = getDiscount(product);
-  const discountAmount = product.price * discount.rate;
-  const subtotal = product.price - discountAmount;
 
-  $("#totalBox").innerHTML = `
-    <div>Selected: ${product.title}</div>
-    <div>Base price: ${money(product.price)}</div>
-    <div>Discount: ${money(discountAmount)} — ${discount.reason}</div>
-    <div>Estimated subtotal before shipping/tax: ${money(subtotal)}</div>
+/* /=== CHECKOUT / EMAIL ORDER SHEET START ===/ */
+function showCheckout() {
+  if (cart.length === 0) {
+    showCart();
+    return;
+  }
+
+  $("#contentCanvas").innerHTML = `
+    <div class="cart-page">
+      <button class="back-to-shop" type="button" onclick="showCart()">
+        ← Back to Cart
+      </button>
+
+      <h2 class="section-heading">Order Sheet</h2>
+      <p class="section-copy">This creates an email order sheet for Lester to confirm availability, shipping, and payment.</p>
+
+      <form class="order-form" id="orderForm">
+        <h3 style="margin:0;">Customer Info</h3>
+
+        <label for="customerName">Customer name</label>
+        <input id="customerName" autocomplete="name" required placeholder="Customer name" />
+
+        <label for="customerEmail">Customer email</label>
+        <input id="customerEmail" type="email" autocomplete="email" required placeholder="customer@email.com" />
+
+        <label for="customerPhone">Phone</label>
+        <input id="customerPhone" autocomplete="tel" placeholder="Optional" />
+
+        <label for="shippingAddress">Shipping address</label>
+        <textarea id="shippingAddress" rows="3" required placeholder="Street address, apartment, etc."></textarea>
+
+        <label for="cityStateZip">City / State / ZIP</label>
+        <input id="cityStateZip" required placeholder="City, ST 12345" />
+
+        <label for="zipCode">ZIP for local discount check</label>
+        <input id="zipCode" inputmode="numeric" placeholder="12345" />
+
+        <label class="check-row">
+          <input type="checkbox" id="isLocal" />
+          <span>Customer is local to the neighborhood</span>
+        </label>
+
+        <label class="check-row">
+          <input type="checkbox" id="isArtist" />
+          <span>Customer is an artist / painter</span>
+        </label>
+
+        <label for="notes">Order notes</label>
+        <textarea id="notes" rows="3" placeholder="Frame request, pickup question, delivery note, etc."></textarea>
+
+        <div class="total-box">
+          <div>Cart items: ${getCartCount()}</div>
+          <div>Estimated subtotal before shipping/tax: ${money(getCartTotal())}</div>
+          <div>Shipping/tax/payment will be confirmed by Lester.</div>
+        </div>
+
+        <button class="btn btn-primary" type="submit">Create Email Order Sheet</button>
+      </form>
+    </div>
   `;
 
-  const cartCount = $("#cartCount");
-  const cartTotalMini = $("#cartTotalMini");
+  $("#orderForm")?.addEventListener("submit", buildOrderEmail);
 
-  if (cartCount) cartCount.textContent = "1";
-  if (cartTotalMini) cartTotalMini.textContent = money(subtotal);
+  safeScrollTop();
+  updateCartUI();
 }
 
 function buildOrderEmail(event) {
   event.preventDefault();
 
-  const product = getSelectedProduct();
-  const discount = getDiscount(product);
-  const subtotal = product.price - product.price * discount.rate;
+  const zip = $("#zipCode")?.value.trim() || "";
+  const isLocal = $("#isLocal")?.checked || LOCAL_DISCOUNT_ZIPS.includes(zip);
+  const isArtist = $("#isArtist")?.checked || false;
+
+  const discountNote = [
+    isLocal ? "Customer marked local / ZIP matched local list." : "No local discount selected.",
+    isArtist ? "Customer marked artist / painter." : "No artist discount selected."
+  ].join("\n");
+
+  const cartSummary = cart.map((item) => {
+    const lineTotal = item.price * item.quantity;
+    return `${item.title} — ${item.type} — ${item.size} — Qty: ${item.quantity} — ${money(lineTotal)}`;
+  }).join("\n");
 
   const body = `NEW ORDER — Painting With Lester
 
-PRODUCT
-Title: ${product.title}
-Type: ${product.type}
-Size: ${product.size}
-Base Price: ${money(product.price)}
-Fulfillment: ${product.fulfillment}
+CART ITEMS
+${cartSummary}
 
-DISCOUNT
-Discount: ${discount.rate * 100}%
-Reason: ${discount.reason}
-Estimated subtotal before shipping/tax: ${money(subtotal)}
+CART TOTAL
+${money(getCartTotal())}
+
+DISCOUNT CHECK
+${discountNote}
 
 CUSTOMER
 Name: ${$("#customerName").value}
@@ -448,9 +661,9 @@ Email: ${$("#customerEmail").value}
 Phone: ${$("#customerPhone").value || "Not provided"}
 Shipping Address: ${$("#shippingAddress").value}
 City/State/ZIP: ${$("#cityStateZip").value}
-ZIP used for discount check: ${$("#zipCode").value || "Not provided"}
-Local neighborhood?: ${$("#isLocal").checked ? "Yes" : "No"}
-Artist/Painter?: ${$("#isArtist").checked ? "Yes" : "No"}
+ZIP used for discount check: ${zip || "Not provided"}
+Local neighborhood?: ${isLocal ? "Yes" : "No"}
+Artist/Painter?: ${isArtist ? "Yes" : "No"}
 
 NOTES
 ${$("#notes").value || "None"}
@@ -462,27 +675,30 @@ NEXT STEPS
 4. Send confirmation to customer.
 `;
 
-  window.location.href = `mailto:${ORDER_EMAIL}?subject=${encodeURIComponent(`New art order: ${product.title}`)}&body=${encodeURIComponent(body)}`;
+  window.location.href = `mailto:${ORDER_EMAIL}?subject=${encodeURIComponent("New art order: Painting With Lester")}&body=${encodeURIComponent(body)}`;
 }
-/* /=== SHOP END ===/ */
+/* /=== CHECKOUT / EMAIL ORDER SHEET END ===/ */
 
 
 /* /=== ARTIST TOOLS START ===/ */
 function initTools() {
-  $("#paletteBtn").addEventListener("click", generatePalette);
-  $("#ratioBtn").addEventListener("click", calculateRatio);
-  $("#promptBtn").addEventListener("click", generatePrompt);
+  $("#paletteBtn")?.addEventListener("click", generatePalette);
+  $("#ratioBtn")?.addEventListener("click", calculateRatio);
+  $("#promptBtn")?.addEventListener("click", generatePrompt);
 
-  initSketchCanvas();
+  if ($("#sketchCanvas")) initSketchCanvas();
   generatePalette();
 }
 
 function generatePalette() {
+  const output = $("#paletteOutput");
+  if (!output) return;
+
   const colors = Array.from({ length: 5 }, () =>
     `#${Math.floor(Math.random() * 16777215).toString(16).padStart(6, "0")}`
   );
 
-  $("#paletteOutput").innerHTML = colors.map((color) => `
+  output.innerHTML = colors.map((color) => `
     <button
       class="swatch"
       title="Copy ${color}"
@@ -498,8 +714,8 @@ function gcd(a, b) {
 }
 
 function calculateRatio() {
-  const width = Number($("#canvasWidth").value);
-  const height = Number($("#canvasHeight").value);
+  const width = Number($("#canvasWidth")?.value);
+  const height = Number($("#canvasHeight")?.value);
 
   if (!width || !height || width <= 0 || height <= 0) {
     $("#ratioOutput").textContent = "Enter a valid width and height.";
@@ -511,13 +727,16 @@ function calculateRatio() {
 }
 
 function generatePrompt() {
+  const output = $("#promptOutput");
+  if (!output) return;
+
   const moods = ["quiet", "electric", "neighborhood", "sun-soaked", "stormy", "joyful", "cinematic"];
   const subjects = ["alleyway", "porch light", "flower market", "city window", "old doorway", "jazz musician", "corner store"];
   const styles = ["with thick texture", "using only three colors", "as a dream scene", "with wild brush strokes", "in golden-hour light", "with one neon surprise"];
 
   const pick = (list) => list[Math.floor(Math.random() * list.length)];
 
-  $("#promptOutput").textContent = `Paint a ${pick(moods)} ${pick(subjects)} ${pick(styles)}.`;
+  output.textContent = `Paint a ${pick(moods)} ${pick(subjects)} ${pick(styles)}.`;
 }
 /* /=== ARTIST TOOLS END ===/ */
 
@@ -525,8 +744,9 @@ function generatePrompt() {
 /* /=== SKETCH CANVAS START ===/ */
 function initSketchCanvas() {
   const canvas = $("#sketchCanvas");
-  const ctx = canvas.getContext("2d");
+  if (!canvas) return;
 
+  const ctx = canvas.getContext("2d");
   let drawing = false;
   let brushSize = 7;
   let lastX = 0;
@@ -535,7 +755,7 @@ function initSketchCanvas() {
   ctx.lineJoin = "round";
   ctx.lineCap = "round";
   ctx.lineWidth = brushSize;
-  ctx.strokeStyle = $("#brushColor").value;
+  ctx.strokeStyle = $("#brushColor")?.value || "#e63946";
 
   function getPoint(event) {
     const rect = canvas.getBoundingClientRect();
@@ -563,7 +783,7 @@ function initSketchCanvas() {
     const point = getPoint(event);
 
     ctx.lineWidth = brushSize;
-    ctx.strokeStyle = $("#brushColor").value;
+    ctx.strokeStyle = $("#brushColor")?.value || "#e63946";
 
     ctx.beginPath();
     ctx.moveTo(lastX, lastY);
@@ -586,15 +806,15 @@ function initSketchCanvas() {
   canvas.addEventListener("touchmove", draw, { passive: false });
   window.addEventListener("touchend", stop);
 
-  $("#thinBrush").addEventListener("click", () => {
+  $("#thinBrush")?.addEventListener("click", () => {
     brushSize = 4;
   });
 
-  $("#thickBrush").addEventListener("click", () => {
+  $("#thickBrush")?.addEventListener("click", () => {
     brushSize = 14;
   });
 
-  $("#clearCanvas").addEventListener("click", () => {
+  $("#clearCanvas")?.addEventListener("click", () => {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
   });
 }
@@ -607,4 +827,5 @@ document.querySelectorAll(".paint-well").forEach((button) => {
 });
 
 switchSection("shop");
+updateCartUI();
 /* /=== APP INIT END ===/ */
