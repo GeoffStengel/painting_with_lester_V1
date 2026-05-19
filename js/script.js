@@ -294,6 +294,33 @@ function switchSection(sectionName) {
   updateHomeCounts();
 }
 /* /=== SECTION SWITCHING END ===/ */
+/* /=== MOBILE MENU START ===/ */
+const menuToggle =
+  document.getElementById("menuToggle");
+
+const socialMenu =
+  document.getElementById("socialMenu");
+
+menuToggle?.addEventListener("click", () => {
+  socialMenu?.classList.toggle("open");
+});
+/* /=== MOBILE MENU END ===/ */
+
+
+/* /=== APP INIT START ===/ */
+document.querySelectorAll(".paint-well").forEach((button) => {
+  button.addEventListener("click", () => {
+    switchSection(button.dataset.section);
+  });
+});
+
+switchSection("home");
+
+updateCartUI();
+updateHomeCounts();
+/* /=== APP INIT END ===/ */
+
+
 
 
 /* /=== HOME STATS COUNTS START ===/ */
