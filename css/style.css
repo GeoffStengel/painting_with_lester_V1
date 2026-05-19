@@ -337,7 +337,7 @@ button {
 /* === POSITIONING === */
 
 .well-home {
-  top: 12%;
+  top: 16%;
   left: 50%;
   transform: translateX(-50%);
 }
@@ -379,6 +379,7 @@ button {
 
 
 /* /=== CENTER LOGO + SIDEBAR STATS START ===/ */
+/*
 .palette-center-logo {
   position: absolute;
   left: 48%;
@@ -400,7 +401,7 @@ button {
   box-shadow:
     inset 0 10px 24px rgba(0,0,0,.82),
     0 8px 16px rgba(0,0,0,.36);
-}
+}  */
 
 /* /=== SIDEBAR STATS START ===/ */
 .sidebar-stats {
@@ -1170,8 +1171,8 @@ select:focus {
 .floating-cart {
   position: fixed;
 
-  right: 22px;
-  bottom: 22px;
+  right: 18px;
+  bottom: 14px;
 
   z-index: 999;
 
@@ -1257,7 +1258,7 @@ select:focus {
   margin: 0;
   max-width: 850px;
   font-family: "Noto Serif JP", serif;
-  font-size: clamp(4rem, 8vw, 8.4rem);
+  font-size: 60px;
   line-height: .86;
   letter-spacing: -.09em;
   color: #1b120d;

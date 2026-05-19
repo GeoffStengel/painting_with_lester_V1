@@ -115,9 +115,20 @@ home: () => `
       </div>
 
       <div class="home-stats">
-        <div><strong>01</strong><span>Originals</span></div>
-        <div><strong>02</strong><span>Fine Prints</span></div>
-        <div><strong>03</strong><span>Artist Tools</span></div>
+        <button class="home-stat-card" onclick="openShopCategory('original')">
+          <strong id="originalCount">00</strong>
+          <span>Originals</span>
+        </button>
+      
+        <button class="home-stat-card" onclick="openShopCategory('print')">
+          <strong id="printCount">00</strong>
+          <span>Fine Prints</span>
+        </button>
+      
+        <button class="home-stat-card" onclick="switchSection('tools')">
+          <strong>03</strong>
+          <span>Artist Tools</span>
+        </button>
       </div>
     </div>
 
@@ -258,21 +269,67 @@ function switchSection(sectionName) {
   const canvas = $("#contentCanvas");
   if (!canvas) return;
 
-  canvas.innerHTML = sections[sectionName] ? sections[sectionName]() : sections.home();
+  canvas.innerHTML = sections[sectionName]
+    ? sections[sectionName]()
+    : sections.home();
 
   document.querySelectorAll(".paint-well").forEach((button) => {
-    button.classList.toggle("active", button.dataset.section === sectionName);
+    button.classList.toggle(
+      "active",
+      button.dataset.section === sectionName
+    );
   });
 
   safeScrollTop();
 
-  if (sectionName === "shop") initShop();
-  if (sectionName === "tools") initTools();
+  if (sectionName === "shop") {
+    initShop();
+  }
+
+  if (sectionName === "tools") {
+    initTools();
+  }
 
   updateCartUI();
+  updateHomeCounts();
 }
 /* /=== SECTION SWITCHING END ===/ */
 
+
+/* /=== HOME STATS COUNTS START ===/ */
+function updateHomeCounts() {
+  const originals = products.filter(
+    p => p.category === "original"
+  ).length;
+
+  const prints = products.filter(
+    p => p.category === "print"
+  ).length;
+
+  const originalEl = document.getElementById("originalCount");
+  const printEl = document.getElementById("printCount");
+
+  if (originalEl) {
+    originalEl.textContent =
+      String(originals).padStart(2, "0");
+  }
+
+  if (printEl) {
+    printEl.textContent =
+      String(prints).padStart(2, "0");
+  }
+}
+/* /=== HOME STATS COUNTS END ===/ */
+
+
+/* /=== SHOP CATEGORY OPEN START ===/ */
+let activeShopFilter = "all";
+
+function openShopCategory(category) {
+  activeShopFilter = category;
+  switchSection("shop");
+}
+/* /=== SHOP CATEGORY OPEN END ===/ */
 
 /* /=== CART LOGIC START ===/ */
 function addToCart(productId) {
@@ -503,41 +560,87 @@ function addDetailItemToCart(productId) {
 /* /=== SHOP START ===/ */
 function initShop() {
   const shopGrid = $("#shopGrid");
+
   if (!shopGrid) return;
 
-  renderShopProducts(products);
+  let currentProducts =
+    activeShopFilter === "all"
+      ? [...products]
+      : products.filter(
+          (product) => product.category === activeShopFilter
+        );
+
+  renderShopProducts(currentProducts);
 
   document.querySelectorAll(".shop-tab").forEach((tab) => {
     tab.addEventListener("click", () => {
-      document.querySelectorAll(".shop-tab").forEach((item) => item.classList.remove("active"));
+
+      document.querySelectorAll(".shop-tab").forEach((item) => {
+        item.classList.remove("active");
+      });
+
       tab.classList.add("active");
 
       const filter = tab.dataset.filter;
-      const filteredProducts =
-        filter === "all"
-          ? products
-          : products.filter((product) => product.type === filter);
 
-      renderShopProducts(filteredProducts);
+      activeShopFilter =
+        filter === "Original Painting"
+          ? "original"
+          : filter === "Fine Art Print"
+          ? "print"
+          : "all";
+
+      currentProducts =
+        activeShopFilter === "all"
+          ? [...products]
+          : products.filter(
+              (product) => product.category === activeShopFilter
+            );
+
+      applyCurrentSort();
       updateCartUI();
+      updateHomeCounts();
     });
   });
 
-  $("#shopSort")?.addEventListener("change", (event) => {
-    const sorted = [...products];
-
-    if (event.target.value === "low") sorted.sort((a, b) => a.price - b.price);
-    if (event.target.value === "high") sorted.sort((a, b) => b.price - a.price);
-
-    renderShopProducts(sorted);
-    updateCartUI();
+  $("#shopSort")?.addEventListener("change", () => {
+    applyCurrentSort();
   });
 
+  function applyCurrentSort() {
+    const sortValue = $("#shopSort")?.value || "featured";
+
+    let sortedProducts = [...currentProducts];
+
+    if (sortValue === "low") {
+      sortedProducts.sort((a, b) => a.price - b.price);
+    }
+
+    if (sortValue === "high") {
+      sortedProducts.sort((a, b) => b.price - a.price);
+    }
+
+    renderShopProducts(sortedProducts);
+  }
+
   updateCartUI();
+  updateHomeCounts();
 
   function renderShopProducts(productList) {
+
+    if (!productList.length) {
+      shopGrid.innerHTML = `
+        <div class="empty-shop-state">
+          <h3>No artwork found</h3>
+          <p>More pieces are being added soon.</p>
+        </div>
+      `;
+      return;
+    }
+
     shopGrid.innerHTML = productList.map((product) => `
       <article class="product-card">
+
         <button
           class="product-art product-image-button"
           data-type="${product.type}"
@@ -548,8 +651,12 @@ function initShop() {
         </button>
 
         <div class="product-body">
+
           <h3>${product.title}</h3>
-          <p class="section-copy">${product.description}</p>
+
+          <p class="section-copy">
+            ${product.description}
+          </p>
 
           <div class="product-meta">
             <span>${product.size}</span>
@@ -560,9 +667,19 @@ function initShop() {
             <span>${product.type}</span>
           </div>
 
-          <button class="btn btn-primary btn-small" onclick="addToCart('${product.id}')" type="button">
-            Add to Cart
+          <button
+            class="btn btn-primary btn-small"
+            onclick="addToCart('${product.id}')"
+            type="button">
+
+            ${
+              product.maxQty === 1
+                ? "Claim Original"
+                : "Add to Cart"
+            }
+
           </button>
+
         </div>
       </article>
     `).join("");
