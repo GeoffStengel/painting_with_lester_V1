@@ -95,35 +95,46 @@ function getCartCount() {
 
 /* /=== SECTION TEMPLATES START ===/ */
 const sections = {
-  home: () => `
-    <div class="canvas-section hero-grid">
-      <div>
-        <h1 class="hero-title">Step into <span class="paint-script">Lester's Studio.</span></h1>
-        <p class="section-copy">
-          A premium interactive art site built like a studio table: one palette,
-          one canvas, clear paths for collectors, print buyers, and artists.
-        </p>
+home: () => `
+  <section class="home-page canvas-section">
+    <div class="home-copy">
+      <p class="home-kicker">Original Art · Prints · Creative Tools</p>
 
-        <div class="hero-actions">
-          <button class="btn btn-primary" onclick="switchSection('shop')">Browse the Shop</button>
-          <button class="btn btn-dark" onclick="switchSection('tools')">Try Artist Tools</button>
-        </div>
+      <h1 class="home-title">
+        Paintings with <span>motion, color,</span> and soul.
+      </h1>
 
-        <div class="feature-row">
-          <div class="feature-card"><strong>Originals</strong><p class="section-copy">Physical paintings ship from Lester.</p></div>
-          <div class="feature-card"><strong>Prints</strong><p class="section-copy">Prints are ordered after confirmation.</p></div>
-          <div class="feature-card"><strong>Orders</strong><p class="section-copy">Email sheets keep fulfillment simple.</p></div>
-        </div>
+      <p class="home-intro">
+        Step inside Lester’s studio — explore original paintings, order fine art prints,
+        and play with interactive tools made for artists and collectors.
+      </p>
+
+      <div class="home-actions">
+        <button class="btn btn-primary" onclick="switchSection('shop')">Shop the Collection</button>
+        <button class="btn btn-dark" onclick="switchSection('gallery')">View Gallery</button>
       </div>
 
-      <div class="featured-card">
-        <div>
-          <strong style="font-size:1.6rem;">Currently Mixing</strong>
-          <p style="color:rgba(255,255,255,.82);">Golden Hour Serenity</p>
-        </div>
+      <div class="home-stats">
+        <div><strong>01</strong><span>Originals</span></div>
+        <div><strong>02</strong><span>Fine Prints</span></div>
+        <div><strong>03</strong><span>Artist Tools</span></div>
       </div>
     </div>
-  `,
+
+    <div class="home-art-wrap">
+      <div class="featured-card">
+        <div>
+          <strong>Featured Work</strong>
+          <p>Color, texture, and studio energy.</p>
+        </div>
+      </div>
+
+      <div class="paint-orb orb-red"></div>
+      <div class="paint-orb orb-blue"></div>
+      <div class="paint-orb orb-yellow"></div>
+    </div>
+  </section>
+`,
 
   gallery: () => `
     <div class="canvas-section" style="padding:56px;">

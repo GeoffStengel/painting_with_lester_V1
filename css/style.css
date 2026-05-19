@@ -337,7 +337,7 @@ button {
 /* === POSITIONING === */
 
 .well-home {
-  top: 7%;
+  top: 12%;
   left: 50%;
   transform: translateX(-50%);
 }
@@ -348,22 +348,22 @@ button {
 }
 
 .well-shop {
-  top: 50%;
+  top: 48%;
   right: 1%;
 }
 
 .well-tools {
-  bottom: -24%;
-  left: 10;
+  bottom: -20%;
+  left: 1%;
 }
 
 .well-about {
-  bottom: -24%;
-  right: 2%;
+  bottom: -18%;
+  right: 0%;
 }
 
 .well-socials {
-  bottom: -46%;
+  bottom: -48%;
   left: 50%;
   transform: translateX(-50%);
 }
@@ -381,8 +381,8 @@ button {
 /* /=== CENTER LOGO + SIDEBAR STATS START ===/ */
 .palette-center-logo {
   position: absolute;
-  left: 50%;
-  top: 52%;
+  left: 48%;
+  top: 86%;
   width: 78px;
   height: 78px;
   font-size: 1.75rem;
@@ -502,12 +502,14 @@ button {
   display: flex;
   align-items: flex-end;
   align-self: stretch;
-  background:
-    radial-gradient(circle at 30% 22%, #fff 0 4%, transparent 5%),
-    radial-gradient(circle at 34% 28%, var(--red) 0 16%, transparent 17%),
-    radial-gradient(circle at 72% 24%, var(--yellow) 0 15%, transparent 16%),
-    radial-gradient(circle at 46% 66%, var(--blue) 0 19%, transparent 20%),
-    linear-gradient(135deg, var(--purple), var(--orange));
+   background:
+    linear-gradient(
+      180deg,
+      rgba(0,0,0,.08),
+      rgba(0,0,0,.48)
+    ),
+    url("../images/nocturne_ep4_30x40acrylic_on_canvas.jpg")
+    center center / cover no-repeat;
   box-shadow: 0 26px 60px rgba(80,45,12,.26);
   color: white;
   position: relative;
@@ -1227,7 +1229,172 @@ select:focus {
 
   font-size: 1rem;
 }
+/* /=== HOME WOW SECTION START ===/ */
+.home-page {
+  min-height: calc(100svh - 74px);
+  padding: 56px;
+  display: grid;
+  grid-template-columns: minmax(0, .95fr) minmax(360px, .8fr);
+  gap: 44px;
+  align-items: center;
+  background:
+    radial-gradient(circle at 18% 20%, rgba(230,57,70,.16), transparent 18rem),
+    radial-gradient(circle at 80% 18%, rgba(39,125,161,.16), transparent 20rem),
+    linear-gradient(135deg, #fff8ec, #f3e5cf);
+  overflow: hidden;
+}
 
+.home-kicker {
+  margin: 0 0 18px;
+  font-size: .82rem;
+  font-weight: 900;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: #9b4b1d;
+}
+
+.home-title {
+  margin: 0;
+  max-width: 850px;
+  font-family: "Noto Serif JP", serif;
+  font-size: clamp(4rem, 8vw, 8.4rem);
+  line-height: .86;
+  letter-spacing: -.09em;
+  color: #1b120d;
+}
+
+.home-title span {
+  display: block;
+  color: transparent;
+  background: linear-gradient(90deg, #e63946, #f77f00, #277da1, #7b2cbf);
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+
+.home-intro {
+  max-width: 620px;
+  margin: 24px 0 0;
+  font-size: 1.13rem;
+  line-height: 1.8;
+  color: rgba(32,21,16,.72);
+}
+
+.home-actions {
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+  margin-top: 30px;
+}
+
+.home-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+  margin-top: 34px;
+  max-width: 560px;
+}
+
+.home-stats div {
+  padding: 18px;
+  border-radius: 18px;
+  background: rgba(255,255,255,.55);
+  border: 1px solid rgba(80,45,12,.1);
+}
+
+.home-stats strong {
+  display: block;
+  font-size: 1.45rem;
+}
+
+.home-stats span {
+  font-size: .8rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  color: rgba(32,21,16,.62);
+}
+
+.home-art-wrap {
+  position: relative;
+  min-height: 560px;
+}
+
+.home-art-wrap .featured-card {
+  min-height: 560px;
+  transform: rotate(2deg);
+}
+
+.paint-orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(.3px);
+  box-shadow: 0 18px 38px rgba(0,0,0,.22);
+  animation: floatOrb 5s ease-in-out infinite;
+}
+
+.orb-red {
+  width: 92px;
+  height: 92px;
+  left: -22px;
+  top: 50px;
+  background: radial-gradient(circle at 35% 30%, #ff8a8a, #e63946);
+}
+
+.orb-blue {
+  width: 74px;
+  height: 74px;
+  right: -18px;
+  top: 210px;
+  background: radial-gradient(circle at 35% 30%, #7ee2ff, #277da1);
+  animation-delay: -1.4s;
+}
+
+.orb-yellow {
+  width: 58px;
+  height: 58px;
+  left: 40px;
+  bottom: 30px;
+  background: radial-gradient(circle at 35% 30%, #ffe99a, #f77f00);
+  animation-delay: -2.2s;
+}
+
+@keyframes floatOrb {
+  0%, 100% {
+    transform: translateY(0) rotate(0);
+  }
+
+  50% {
+    transform: translateY(-14px) rotate(8deg);
+  }
+}
+
+@media (max-width: 1060px) {
+  .home-page {
+    grid-template-columns: 1fr;
+    padding: 38px 22px;
+  }
+
+  .home-art-wrap,
+  .home-art-wrap .featured-card {
+    min-height: 420px;
+  }
+}
+
+@media (max-width: 720px) {
+  .home-title {
+    font-size: clamp(3.2rem, 18vw, 5rem);
+  }
+
+  .home-stats {
+    grid-template-columns: 1fr;
+  }
+
+  .home-art-wrap,
+  .home-art-wrap .featured-card {
+    min-height: 340px;
+  }
+}
+
+/* /=== HOME WOW SECTION END ===/ */
 @media (max-width: 720px) {
   .floating-cart {
     right: 14px;
