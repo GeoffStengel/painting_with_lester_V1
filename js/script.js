@@ -65,12 +65,45 @@ function initMobileMenu() {
   const menuToggle = document.querySelector("#menuToggle");
   const mainNav = document.querySelector("#mainNav");
 
-  menuToggle?.addEventListener("click", () => {
-    const isOpen = mainNav?.classList.toggle("open");
+  if (!menuToggle || !mainNav) return;
+
+  /* /=== TOGGLE MENU START ===/ */
+  menuToggle.addEventListener("click", (event) => {
+    event.stopPropagation();
+
+    const isOpen = mainNav.classList.toggle("open");
 
     menuToggle.classList.toggle("open", isOpen);
     menuToggle.setAttribute("aria-expanded", String(isOpen));
   });
+  /* /=== TOGGLE MENU END ===/ */
+
+
+  /* /=== CLOSE WHEN CLICKING OUTSIDE START ===/ */
+  document.addEventListener("click", (event) => {
+    const clickedInsideMenu = mainNav.contains(event.target);
+    const clickedToggle = menuToggle.contains(event.target);
+
+    if (!clickedInsideMenu && !clickedToggle) {
+      mainNav.classList.remove("open");
+
+      menuToggle.classList.remove("open");
+      menuToggle.setAttribute("aria-expanded", "false");
+    }
+  });
+  /* /=== CLOSE WHEN CLICKING OUTSIDE END ===/ */
+
+
+  /* /=== CLOSE AFTER NAV LINK CLICK START ===/ */
+  mainNav.querySelectorAll("a, button").forEach((element) => {
+    element.addEventListener("click", () => {
+      mainNav.classList.remove("open");
+
+      menuToggle.classList.remove("open");
+      menuToggle.setAttribute("aria-expanded", "false");
+    });
+  });
+  /* /=== CLOSE AFTER NAV LINK CLICK END ===/ */
 }
 /* /=== MOBILE NAV MENU END ===/ */
 
