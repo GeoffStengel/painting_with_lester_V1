@@ -44,7 +44,7 @@
 
 .home-hero h1 {
   margin: 0;
-  font-size: clamp(3.3rem, 7vw, 6.4rem);
+  font-size: 80px;
   line-height: .88;
   letter-spacing: -.08em;
   color: var(--ink);
@@ -87,19 +87,30 @@
   color: rgba(32, 21, 16, .62);
 }
 
+/* /=== HOME FEATURED IMAGE START ===/ */
 .home-art-window {
+  position: relative;
   min-height: 520px;
   border-radius: 34px;
   overflow: hidden;
   box-shadow: 0 26px 60px rgba(80, 45, 12, .24);
   transform: rotate(2deg);
+  background: rgba(255, 255, 255, .45);
 }
 
 .home-art-window img {
+  position: absolute;
+  inset: 0;
+
   width: 100%;
   height: 100%;
+
   object-fit: cover;
+  object-position: center;
+
+  display: block;
 }
+/* /=== HOME FEATURED IMAGE END ===/ */
 /* /=== HOME SECTION END ===/ */
 
 

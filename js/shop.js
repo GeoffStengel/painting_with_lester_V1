@@ -356,13 +356,13 @@ function showCart() {
                         type="number"
                         min="1"
                         value="${item.quantity}"
-                        onchange="updateCartQuantity('${item.productId}', this.value)"
+                        onchange="updateCartQuantity('${item.productId}', this.value, '${itemSize}')"
                       >
 
                       <button
                         type="button"
                         class="remove-btn"
-                        onclick="removeFromCart('${item.productId}')"
+                        onclick="removeFromCart('${item.productId}', '${itemSize}')"
                       >
                         Remove
                       </button>
@@ -457,7 +457,7 @@ function showCheckout() {
           </label>
 
           <button class="btn btn-primary" type="submit">
-            Email Order Request
+            Send Order Request
           </button>
         </form>
 

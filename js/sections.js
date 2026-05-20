@@ -5,7 +5,7 @@ const sections = {
     <div class="content-section home-section">
       <div class="home-hero">
         <p class="eyebrow">Painting with Lester</p>
-        <h1>Colorful originals, expressive prints, and creative tools.</h1>
+        <h1>Colorful originals, expressive prints, & creative tools.</h1>
         <p class="section-copy">
           Explore Lester's artwork, shop available pieces, or play with artist tools made for collectors and creatives.
         </p>
