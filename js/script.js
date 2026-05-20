@@ -1,30 +1,40 @@
 /* /=== APP STATE START ===/ */
-/*
-  activeSection tracks the current page/section.
-  Default is "shop" so users land directly on the artwork for sale.
-*/
 let activeSection = "shop";
 /* /=== APP STATE END ===/ */
 
 
 /* /=== SCROLL HELPER START ===/ */
-/*
-  Keeps section changes feeling like a new page load.
-*/
 function safeScrollTop() {
-  window.scrollTo({
-    top: 0,
-    behavior: "smooth"
+  const isMobile = window.matchMedia("(max-width: 1060px)").matches;
+  const contentCanvas = document.querySelector("#contentCanvas");
+
+  requestAnimationFrame(() => {
+    if (isMobile && contentCanvas) {
+      const topbar = document.querySelector(".topbar");
+      const topbarHeight = topbar?.offsetHeight || 0;
+      const targetY =
+        contentCanvas.getBoundingClientRect().top +
+        window.scrollY -
+        topbarHeight;
+
+      window.scrollTo({
+        top: targetY,
+        behavior: "smooth"
+      });
+
+      return;
+    }
+
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth"
+    });
   });
 }
 /* /=== SCROLL HELPER END ===/ */
 
 
 /* /=== SECTION SWITCHER START ===/ */
-/*
-  This is the main page router.
-  It swaps the content inside #contentCanvas using templates from sections.js.
-*/
 function switchSection(sectionName) {
   const canvas = document.querySelector("#contentCanvas");
 
@@ -51,32 +61,21 @@ function switchSection(sectionName) {
 
 
 /* /=== MOBILE NAV MENU START ===/ */
-/*
-  Opens/closes the top navigation on smaller screens.
-  Uses #mainNav now instead of the old #socialMenu.
-*/
 function initMobileMenu() {
   const menuToggle = document.querySelector("#menuToggle");
   const mainNav = document.querySelector("#mainNav");
 
   menuToggle?.addEventListener("click", () => {
-  const isOpen = mainNav?.classList.toggle("open");
+    const isOpen = mainNav?.classList.toggle("open");
 
-  menuToggle.classList.toggle("open", isOpen);
-  menuToggle.setAttribute("aria-expanded", String(isOpen));
-});
+    menuToggle.classList.toggle("open", isOpen);
+    menuToggle.setAttribute("aria-expanded", String(isOpen));
+  });
 }
 /* /=== MOBILE NAV MENU END ===/ */
 
 
 /* /=== APP INIT START ===/ */
-/*
-  Startup order matters:
-  1. Mobile menu
-  2. SVG palette
-  3. Initial section
-  4. Cart/home UI numbers
-*/
 initMobileMenu();
 initSvgPalette();
 switchSection("shop");
