@@ -58,7 +58,6 @@ const products = [
     { label: "18 × 24 in", price: 150 },
     { label: "30 × 40 in", price: 300 }
   ]
-
   },
 
   {
@@ -92,8 +91,13 @@ const products = [
     fulfillment: "Printed to order and shipped rolled or flat depending on size.",
     image: "images/caramel_24x36_acrylic_on_canvas.jpg",
     description: "A soft, nostalgic piece with warm evening tones.",
-    tags: ["Print", "Open Edition"]
-  }
+    tags: ["Print", "Open Edition"],
+        printOptions: [
+    { label: "12 × 16 in", price: 85 },
+    { label: "18 × 24 in", price: 150 },
+    { label: "24 × 36 in", price: 250 }
+  ]
+  },
 ];
 
 /* /=== GALLERY ONLY ARTWORK START ===/ */
