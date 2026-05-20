@@ -79,22 +79,70 @@
     line-height: 1.1;
   }
 
-  .menu-toggle {
-    display: grid;
-    place-items: center;
+/* /=== MOBILE MENU BUTTON START ===/ */
+/* /=== MOBILE MENU BUTTON START ===/ */
+.menu-toggle {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
 
-    width: 54px;
-    height: 54px;
-    margin-left: auto;
+  width: 54px;
+  height: 54px;
 
-    border: 0;
-    border-radius: 16px;
+  border: 0;
+  border-radius: 16px;
 
-    background: rgba(255, 248, 236, .12);
-    color: white;
+  background: rgba(255, 255, 255, .10);
 
-    font-size: 1.8rem;
-  }
+  cursor: pointer;
+
+  transition:
+    background .18s ease,
+    transform .14s ease;
+}
+
+.menu-toggle:hover {
+  background: rgba(255,255,255,.16);
+}
+
+.menu-toggle:active {
+  transform: scale(.96);
+}
+
+.menu-toggle span {
+  width: 24px;
+  height: 3px;
+
+  border-radius: 999px;
+
+  background: var(--cream);
+
+  transition:
+    transform .18s ease,
+    opacity .14s ease;
+}
+
+/* /=== OPEN STATE START ===/ */
+.menu-toggle.open span:nth-child(1) {
+  transform:
+    translateY(8px)
+    rotate(45deg);
+}
+
+.menu-toggle.open span:nth-child(2) {
+  opacity: 0;
+}
+
+.menu-toggle.open span:nth-child(3) {
+  transform:
+    translateY(-8px)
+    rotate(-45deg);
+}
+/* /=== OPEN STATE END ===/ */
+/* /=== MOBILE MENU BUTTON END ===/ */
+/* /=== MOBILE MENU BUTTON END ===/ */
 
 .main-nav {
   position: absolute;

@@ -60,8 +60,11 @@ function initMobileMenu() {
   const mainNav = document.querySelector("#mainNav");
 
   menuToggle?.addEventListener("click", () => {
-    mainNav?.classList.toggle("open");
-  });
+  const isOpen = mainNav?.classList.toggle("open");
+
+  menuToggle.classList.toggle("open", isOpen);
+  menuToggle.setAttribute("aria-expanded", String(isOpen));
+});
 }
 /* /=== MOBILE NAV MENU END ===/ */
 
