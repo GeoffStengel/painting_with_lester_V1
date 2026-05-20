@@ -33,9 +33,22 @@ const sections = {
         </div>
       </div>
 
-      <div class="home-art-window">
-        <img src="${products[0].image}" alt="${products[0].title}">
-      </div>
+      <a
+  href="#"
+  class="home-art-window home-art-button"
+  onclick="showProductDetail('${products[0].id}'); return false;"
+  aria-label="View ${products[0].title}"
+>
+  <img
+    src="${products[0].image}"
+    alt="${products[0].title}"
+  >
+
+  <span class="home-art-cta">
+    View ${products[0].title}
+  </span>
+</a>
+
     </div>
   `,
   /* /=== HOME SECTION TEMPLATE END ===/ */

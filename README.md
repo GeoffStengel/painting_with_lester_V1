@@ -11,6 +11,8 @@ Website for the Artist known as "Lester" a one of a kind creature from the plane
 
 ✅ products.js is where you will add items like paintings & prints for sale
 
+✅ products.js at bottom has FormSpree EndPoint its to receive your order emails to YOUR actual email
+
 💡 To Make The Site Yours Fully U Need The Code, 
 1. Download ZIP Folder From Green Code Button @ https://github.com/GeoffStengel/painting_with_lester_V1, 
 2. Make A Repository On Github In Your Account (Create Account If U Dont Have) 
