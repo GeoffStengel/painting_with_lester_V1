@@ -1,10 +1,29 @@
+/* /=== SHOP STATE START ===/ */
+/*
+  Tracks which shop filter is active.
+  Used by homepage stat buttons and shop filter buttons.
+*/
 let activeShopFilter = "all";
+/* /=== SHOP STATE END ===/ */
 
+
+/* /=== SHOP CATEGORY NAV START ===/ */
+/*
+  Lets buttons outside the shop open a specific category.
+  Example: homepage "Prints" button.
+*/
 function openShopCategory(category) {
   activeShopFilter = category;
   switchSection("shop");
 }
+/* /=== SHOP CATEGORY NAV END ===/ */
 
+
+/* /=== SHOP GRID START ===/ */
+/*
+  Renders product cards in the Shop section.
+  Product detail page handles print-size options.
+*/
 function initShop() {
   const grid = document.querySelector("#shopGrid");
   const filterButtons = [...document.querySelectorAll(".filter-btn")];
@@ -19,7 +38,11 @@ function initShop() {
 
     grid.innerHTML = filteredProducts.map((product) => `
       <article class="product-card">
-        <button class="product-image-btn" type="button" onclick="showProductDetail('${product.id}')">
+        <button
+          class="product-image-btn"
+          type="button"
+          onclick="showProductDetail('${product.id}')"
+        >
           <img src="${product.image}" alt="${product.title}">
         </button>
 
@@ -30,8 +53,21 @@ function initShop() {
           <strong>$${product.price.toLocaleString()}</strong>
 
           <div class="product-actions">
-            <button class="btn btn-dark" type="button" onclick="showProductDetail('${product.id}')">View</button>
-            <button class="btn btn-primary" type="button" onclick="addToCart('${product.id}')">Add</button>
+            <button
+              class="btn btn-dark"
+              type="button"
+              onclick="showProductDetail('${product.id}')"
+            >
+              View
+            </button>
+
+            <button
+              class="btn btn-primary"
+              type="button"
+              onclick="showProductDetail('${product.id}')"
+            >
+              Choose Options
+            </button>
           </div>
         </div>
       </article>
@@ -54,114 +90,158 @@ function initShop() {
 
   renderProducts(activeShopFilter);
 }
+/* /=== SHOP GRID END ===/ */
 
-function showCart() {
-  const canvas = document.querySelector("#contentCanvas");
 
-  if (!canvas) return;
+/* /=== PRINT OPTION HELPERS START ===/ */
+/*
+  Print products can have multiple size/price options.
+  Originals usually do not, so they fall back to product.size/product.price.
+*/
+function getSelectedPrintOption(product) {
+  const select = document.querySelector("#printOptionSelect");
 
-  const subtotal = getCartTotal();
+  if (!product.printOptions?.length || !select) {
+    return {
+      label: product.size,
+      price: product.price
+    };
+  }
 
-  canvas.innerHTML = `
-    <div class="content-section">
-      <div class="cart-page">
-        <button class="back-to-shop" type="button" onclick="switchSection('shop')">← Back to Shop</button>
-
-        <h2 class="section-heading">Your Cart</h2>
-
-        ${
-          cart.length === 0
-            ? `<p class="section-copy">Your cart is empty.</p>`
-            : `
-              <div class="cart-list">
-                ${cart.map((item) => {
-                  const product = getProduct(item.productId);
-                  if (!product) return "";
-
-                  return `
-                    <article class="cart-item">
-                      <img src="${product.image}" alt="${product.title}">
-
-                      <div>
-                        <h3>${product.title}</h3>
-                        <p>${product.type}</p>
-                        <strong>$${product.price.toLocaleString()}</strong>
-                      </div>
-
-                      <input
-                        type="number"
-                        min="1"
-                        value="${item.quantity}"
-                        onchange="updateCartQuantity('${item.productId}', this.value)"
-                      >
-
-                      <button type="button" class="remove-btn" onclick="removeFromCart('${item.productId}')">
-                        Remove
-                      </button>
-                    </article>
-                  `;
-                }).join("")}
-              </div>
-
-              <div class="cart-summary">
-                <p>Subtotal</p>
-                <strong>$${subtotal.toLocaleString()}</strong>
-                <button class="btn btn-primary" type="button" onclick="showCheckout()">Start Checkout</button>
-              </div>
-            `
-        }
-      </div>
-    </div>
-  `;
-
-  safeScrollTop();
+  return product.printOptions[Number(select.value)] || product.printOptions[0];
 }
 
+function updatePrintOptionPrice(productId) {
+  const product = getProduct(productId);
+  const priceEl = document.querySelector("#detailPrice");
+  const sizeEl = document.querySelector("#detailSelectedSize");
+
+  if (!product || !priceEl) return;
+
+  const selectedOption = getSelectedPrintOption(product);
+
+  priceEl.textContent = `$${selectedOption.price.toLocaleString()}`;
+
+  if (sizeEl) {
+    sizeEl.textContent = selectedOption.label;
+  }
+}
+/* /=== PRINT OPTION HELPERS END ===/ */
+
+
+/* /=== PRODUCT DETAIL START ===/ */
+/*
+  Shows one artwork/product.
+  If printOptions exist, user picks size before adding to cart.
+  Image uses gallery lightbox for full-size preview.
+*/
 function showProductDetail(productId) {
   const product = getProduct(productId);
   const canvas = document.querySelector("#contentCanvas");
 
   if (!product || !canvas) return;
 
+  const hasPrintOptions = product.printOptions?.length > 0;
+  const startingOption = hasPrintOptions
+    ? product.printOptions[0]
+    : { label: product.size, price: product.price };
+
   canvas.innerHTML = `
     <div class="content-section">
       <div class="product-detail-page">
-        <button class="back-to-shop" type="button" onclick="switchSection('shop')">← Back to Shop</button>
+        <button
+          class="back-to-shop"
+          type="button"
+          onclick="switchSection('shop')"
+        >
+          ← Back to Shop
+        </button>
 
         <section class="product-detail-grid">
           <div class="detail-gallery">
-<button
-  class="detail-image-frame detail-image-button"
-  type="button"
-  onclick="openGalleryLightbox(
-    '${product.image}',
-    '${product.title}',
-    '${product.type}',
-    '${product.size}',
-    'Available'
-  )"
->
-  <img src="${product.image}" alt="${product.title}">
-  <span>Click to view full size</span>
-</button>
+            <button
+              class="detail-image-frame detail-image-button"
+              type="button"
+              onclick="openGalleryLightbox(
+                '${product.image}',
+                '${product.title}',
+                '${product.type}',
+                '${product.size}',
+                'Available'
+              )"
+            >
+              <img src="${product.image}" alt="${product.title}">
+              <span>Click to view full size</span>
+            </button>
           </div>
 
           <div class="detail-info">
             <p class="eyebrow">${product.type}</p>
+
             <h2>${product.title}</h2>
-            <p class="detail-price">$${product.price.toLocaleString()}</p>
+
+            <p class="detail-price" id="detailPrice">
+              $${startingOption.price.toLocaleString()}
+            </p>
+
             <p>${product.description}</p>
-            <p><strong>Size:</strong> ${product.size}</p>
-            <p><strong>Fulfillment:</strong> ${product.fulfillment}</p>
+
+            ${
+              hasPrintOptions
+                ? `
+                  <label class="print-option-picker">
+                    Print Size
+
+                    <select
+                      id="printOptionSelect"
+                      onchange="updatePrintOptionPrice('${product.id}')"
+                    >
+                      ${product.printOptions.map((option, index) => `
+                        <option value="${index}">
+                          ${option.label} — $${option.price.toLocaleString()}
+                        </option>
+                      `).join("")}
+                    </select>
+                  </label>
+
+                  <p>
+                    <strong>Selected Size:</strong>
+                    <span id="detailSelectedSize">${startingOption.label}</span>
+                  </p>
+                `
+                : `
+                  <p>
+                    <strong>Size:</strong> ${product.size}
+                  </p>
+                `
+            }
+
+            <p>
+              <strong>Fulfillment:</strong> ${product.fulfillment}
+            </p>
 
             <div class="tag-row">
               ${product.tags.map((tag) => `<span>${tag}</span>`).join("")}
             </div>
 
             <div class="detail-actions">
-              <button class="qty-btn" type="button" onclick="adjustDetailQty(-1)">−</button>
+              <button
+                class="qty-btn"
+                type="button"
+                onclick="adjustDetailQty(-1)"
+              >
+                −
+              </button>
+
               <span id="detailQty">1</span>
-              <button class="qty-btn" type="button" onclick="adjustDetailQty(1)">+</button>
+
+              <button
+                class="qty-btn"
+                type="button"
+                onclick="adjustDetailQty(1)"
+              >
+                +
+              </button>
             </div>
 
             <button
@@ -180,7 +260,14 @@ function showProductDetail(productId) {
 
   safeScrollTop();
 }
+/* /=== PRODUCT DETAIL END ===/ */
 
+
+/* /=== DETAIL QUANTITY START ===/ */
+/*
+  Quantity selector on product detail page.
+  Cart-level maxQty is still enforced in cart.js.
+*/
 function adjustDetailQty(change) {
   const qtyEl = document.querySelector("#detailQty");
 
@@ -191,18 +278,127 @@ function adjustDetailQty(change) {
 
   qtyEl.textContent = nextQty;
 }
+/* /=== DETAIL QUANTITY END ===/ */
 
+
+/* /=== ADD DETAIL ITEM TO CART START ===/ */
+/*
+  Adds selected print option to cart.
+  For originals/no options, selectedOption falls back to product price and size.
+*/
 function addDetailItemToCart(productId) {
+  const product = getProduct(productId);
   const qtyEl = document.querySelector("#detailQty");
+
+  if (!product) return;
+
+  const selectedOption = getSelectedPrintOption(product);
   const quantity = Number(qtyEl?.textContent) || 1;
 
   for (let i = 0; i < quantity; i += 1) {
-    addToCart(productId);
+    addToCart(productId, selectedOption);
   }
 
   showCart();
 }
+/* /=== ADD DETAIL ITEM TO CART END ===/ */
 
+
+/* /=== CART PAGE START ===/ */
+/*
+  Displays cart contents.
+  Shows selected print size/price when present.
+*/
+function showCart() {
+  const canvas = document.querySelector("#contentCanvas");
+
+  if (!canvas) return;
+
+  const subtotal = getCartTotal();
+
+  canvas.innerHTML = `
+    <div class="content-section">
+      <div class="cart-page">
+        <button
+          class="back-to-shop"
+          type="button"
+          onclick="switchSection('shop')"
+        >
+          ← Back to Shop
+        </button>
+
+        <h2 class="section-heading">Your Cart</h2>
+
+        ${
+          cart.length === 0
+            ? `<p class="section-copy">Your cart is empty.</p>`
+            : `
+              <div class="cart-list">
+                ${cart.map((item) => {
+                  const product = getProduct(item.productId);
+                  if (!product) return "";
+
+                  const itemPrice = item.selectedPrice || product.price;
+                  const itemSize = item.selectedSize || product.size;
+
+                  return `
+                    <article class="cart-item">
+                      <img src="${product.image}" alt="${product.title}">
+
+                      <div>
+                        <h3>${product.title}</h3>
+                        <p>${product.type}</p>
+                        <p><strong>Size:</strong> ${itemSize}</p>
+                        <strong>$${itemPrice.toLocaleString()}</strong>
+                      </div>
+
+                      <input
+                        type="number"
+                        min="1"
+                        value="${item.quantity}"
+                        onchange="updateCartQuantity('${item.productId}', this.value)"
+                      >
+
+                      <button
+                        type="button"
+                        class="remove-btn"
+                        onclick="removeFromCart('${item.productId}')"
+                      >
+                        Remove
+                      </button>
+                    </article>
+                  `;
+                }).join("")}
+              </div>
+
+              <div class="cart-summary">
+                <p>Subtotal</p>
+                <strong>$${subtotal.toLocaleString()}</strong>
+
+                <button
+                  class="btn btn-primary"
+                  type="button"
+                  onclick="showCheckout()"
+                >
+                  Start Checkout
+                </button>
+              </div>
+            `
+        }
+      </div>
+    </div>
+  `;
+
+  safeScrollTop();
+}
+/* /=== CART PAGE END ===/ */
+
+
+/* /=== CHECKOUT START ===/ */
+/*
+  Simple checkout request via email.
+  Later this could become Stripe, Shopify Buy Button, Snipcart, etc.
+*/
 function showCheckout() {
   const canvas = document.querySelector("#contentCanvas");
 
@@ -216,12 +412,23 @@ function showCheckout() {
   canvas.innerHTML = `
     <div class="content-section">
       <div class="checkout-page">
-        <button class="back-to-shop" type="button" onclick="showCart()">← Back to Cart</button>
+        <button
+          class="back-to-shop"
+          type="button"
+          onclick="showCart()"
+        >
+          ← Back to Cart
+        </button>
 
         <p class="eyebrow">Checkout</p>
-        <h2 class="section-heading">Request Purchase</h2>
+
+        <h2 class="section-heading">
+          Request Purchase
+        </h2>
+
         <p class="section-copy">
-          This creates an email order request. Lester can confirm availability, delivery, and payment details.
+          This creates an email order request. Lester can confirm availability,
+          delivery, and payment details.
         </p>
 
         <form id="checkoutForm" class="checkout-form">
@@ -242,10 +449,16 @@ function showCheckout() {
 
           <label>
             Notes
-            <textarea name="notes" rows="4" placeholder="Pickup, delivery questions, framing requests, etc."></textarea>
+            <textarea
+              name="notes"
+              rows="4"
+              placeholder="Pickup, delivery questions, framing requests, etc."
+            ></textarea>
           </label>
 
-          <button class="btn btn-primary" type="submit">Email Order Request</button>
+          <button class="btn btn-primary" type="submit">
+            Email Order Request
+          </button>
         </form>
 
         <p id="checkoutMessage" class="tool-output"></p>
@@ -266,11 +479,19 @@ function showCheckout() {
     const message = document.querySelector("#checkoutMessage");
 
     if (!name || !email || !zip) {
-      if (message) message.textContent = "Please fill out name, email, and ZIP.";
+      if (message) {
+        message.textContent = "Please fill out name, email, and ZIP.";
+      }
+
       return;
     }
 
-    window.location.href = buildOrderEmail({ name, email, zip, notes });
+    window.location.href = buildOrderEmail({
+      name,
+      email,
+      zip,
+      notes
+    });
 
     if (message) {
       message.textContent = "Your email app should open with the order request.";
@@ -279,3 +500,4 @@ function showCheckout() {
 
   safeScrollTop();
 }
+/* /=== CHECKOUT END ===/ */

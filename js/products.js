@@ -14,7 +14,12 @@ const products = [
     fulfillment: "Printed to order and shipped rolled or flat depending on size.",
     image: "images/save_the_tree_nocturne_36x48_acrylic_on_canvas.jpg",
     description: "Inspired by a neighborhood tree saved from being cut down.",
-    tags: ["Print", "Open Edition"]
+    tags: ["Print", "Open Edition"],
+    printOptions: [
+    { label: "12 × 16 in", price: 85 },
+    { label: "18 × 24 in", price: 150 },
+    { label: "24 × 36 in", price: 250 }
+  ]
   },
   {
     id: "fighter-print",
@@ -28,7 +33,12 @@ const products = [
     fulfillment: "Ships directly from Lester or local pickup can be arranged.",
     image: "images/fighter_24x36_acrylic_on_canvas.jpg",
     description: "Cool blues, expressive marks, and a quiet sense of place.",
-    tags: ["Original", "Canvas", "Framed"]
+    tags: ["Original", "Canvas", "Framed"],
+    printOptions: [
+    { label: "12 × 16 in", price: 85 },
+    { label: "18 × 24 in", price: 150 },
+    { label: "24 × 36 in", price: 250 }
+  ]
   },  
   {
     id: "nocturne_ep4-print",
@@ -42,7 +52,13 @@ const products = [
     fulfillment: "Ships directly from Lester or local pickup can be arranged.",
     image: "images/nocturne_ep4_30x40acrylic_on_canvas.jpg",
     description: "A bold original full of warm color, layered texture, and neighborhood energy.",
-    tags: ["Original", "Acrylic", "One of One"]
+    tags: ["Original", "Acrylic", "One of One"],
+    printOptions: [
+    { label: "12 × 16 in", price: 85 },
+    { label: "18 × 24 in", price: 150 },
+    { label: "30 × 40 in", price: 300 }
+  ]
+
   },
 
   {
@@ -57,7 +73,12 @@ const products = [
     fulfillment: "Printed to order and shipped rolled or flat depending on size.",
     image: "images/single_Mom_At_Night_acrylic_on_canvas.jpg",
     description: "A colorful print inspired by movement, music, and street markets.",
-    tags: ["Print", "Signed", "Limited Run"]
+    tags: ["Print", "Signed", "Limited Run"],
+        printOptions: [
+    { label: "6 × 9 in", price: 42 },
+    { label: "13 × 19.5 in", price: 100 },
+    { label: "24 × 36 in", price: 300 }
+  ]
   },
   {
     id: "caramel-print",
