@@ -121,7 +121,6 @@
 }
 /* /=== SHOP PAGE END ===/ */
 
-
 /* /=== PRODUCT DETAIL START ===/ */
 .product-detail-page {
   max-width: 1180px;
@@ -207,6 +206,18 @@
   font-size: 1.2rem;
 }
 /* /=== PRODUCT DETAIL END ===/ */
+
+/* /=== PRODUCT AVAILABILITY START ===/ */
+.product-availability {
+  margin-top: 10px;
+
+  color: rgba(32, 21, 16, .66);
+
+  font-size: .92rem;
+  font-weight: 600;
+  letter-spacing: .015em;
+}
+/* /=== PRODUCT AVAILABILITY END ===/ */
 
 
 /* /=== CHECKOUT START ===/ */

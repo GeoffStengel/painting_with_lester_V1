@@ -1,17 +1,41 @@
 /* /=== CART STATE START ===/ */
 /*
   Stores customer cart items.
-  Print items can include selectedSize and selectedPrice.
+
+  Print items can include:
+  - selectedSize
+  - selectedPrice
+
+  Cart is saved to localStorage so it survives page refresh.
 */
 let cart = [];
 /* /=== CART STATE END ===/ */
 
 
+/* /=== CART STORAGE START ===/ */
+const CART_STORAGE_KEY = "paintingWithLesterCart";
+
+function loadCart() {
+  const savedCart = localStorage.getItem(CART_STORAGE_KEY);
+
+  if (!savedCart) return;
+
+  try {
+    cart = JSON.parse(savedCart);
+  } catch {
+    cart = [];
+  }
+}
+
+function saveCart() {
+  localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(cart));
+}
+
+loadCart();
+/* /=== CART STORAGE END ===/ */
+
+
 /* /=== CART TOTAL START ===/ */
-/*
-  Uses selectedPrice when a print size option was chosen.
-  Falls back to product.price for originals or older cart items.
-*/
 function getCartTotal() {
   return cart.reduce((total, item) => {
     const product = getProduct(item.productId);
@@ -31,10 +55,6 @@ function getCartCount() {
 
 
 /* /=== ADD TO CART START ===/ */
-/*
-  selectedOption is used for print sizes:
-  { label: "12 × 16 in", price: 85 }
-*/
 function addToCart(productId, selectedOption = null) {
   const product = getProduct(productId);
 
@@ -125,13 +145,9 @@ function updateCartQuantity(productId, quantity, selectedSize = "") {
 
 
 /* /=== UPDATE CART UI START ===/ */
-/*
-  Updates all cart badges:
-  - shop page cart
-  - floating cart
-  - any data-cart-count elements
-*/
 function updateCartUI() {
+  saveCart();
+
   const count = getCartCount();
   const total = getCartTotal();
 
@@ -151,17 +167,7 @@ function updateCartUI() {
 
 
 /* /=== ORDER EMAIL BUILDER START ===/ */
-/*
-  Creates a printer/customer-ready email for Lester.
-
-  Tomorrow-ready sales flow:
-  1. Customer submits this order request.
-  2. Lester receives full order details.
-  3. Lester sends ONE Square invoice/payment link.
-  4. Customer pays once.
-  5. Lester orders print/ships item.
-*/
-function buildOrderEmail({ name, email, zip, notes }) {
+function buildOrderEmailBody({ name, email, zip, notes }) {
   const subtotal = getCartTotal();
 
   const orderLines = cart.map((item, index) => {
@@ -231,6 +237,6 @@ function buildOrderEmail({ name, email, zip, notes }) {
     notes || "None"
   ].join("\n");
 
-  return `mailto:${ORDER_EMAIL}?subject=${subject}&body=${encodeURIComponent(body)}`;
+  return body;
 }
 /* /=== ORDER EMAIL BUILDER END ===/ */

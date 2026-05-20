@@ -1,5 +1,5 @@
 const ORDER_EMAIL = "orders@paintingwithlester.com";
-const LOCAL_DISCOUNT_ZIPS = ["00000", "12345", "90210"];
+const LOCAL_DISCOUNT_ZIPS = ["00000", "12345", "90210", "97402"];
 
 const products = [
   {
@@ -197,7 +197,9 @@ const galleryArtwork = [
 ];
 /* /=== GALLERY ONLY ARTWORK END ===/ */
 
-
+/* /=== FORM SERVICES START ===/ */
+const FORMSPREE_ENDPOINT = "https://formspree.io/f/xbdbgaop";
+/* /=== FORM SERVICES END ===/ */
 
 
 function getProduct(productId) {

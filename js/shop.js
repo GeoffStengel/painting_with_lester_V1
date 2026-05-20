@@ -51,12 +51,12 @@ function initShop() {
           <h3>${product.title}</h3>
           <p>${product.size}</p>
           <p class="product-availability">
-  ${
-    product.printOptions?.length
-      ? "Multiple print sizes available"
-      : "Original artwork available"
-  }
-</p>
+            ${
+              product.printOptions?.length
+                ? "Multiple print sizes available"
+                : "Original artwork available"
+            }
+          </p>
 
           <div class="product-actions">
             <button
@@ -403,7 +403,7 @@ function showCart() {
 /* /=== CHECKOUT START ===/ */
 /*
   Simple checkout request via email.
-  Later this could become Stripe, Shopify Buy Button, Snipcart, etc.
+  Lester will confirm availability/shipping and send one Square invoice/payment link.
 */
 function showCheckout() {
   const canvas = document.querySelector("#contentCanvas");
@@ -414,6 +414,40 @@ function showCheckout() {
     showCart();
     return;
   }
+
+  const checkoutSummary = `
+    <div class="checkout-summary">
+      ${cart.map((item) => {
+        const product = getProduct(item.productId);
+
+        if (!product) return "";
+
+        const itemPrice = item.selectedPrice || product.price;
+        const itemSize = item.selectedSize || product.size;
+
+        return `
+          <div class="checkout-summary-item">
+            <img src="${product.image}" alt="${product.title}">
+
+            <div>
+              <h4>${product.title}</h4>
+              <p>${itemSize}</p>
+              <p>Qty ${item.quantity}</p>
+            </div>
+
+            <strong>
+              $${(itemPrice * item.quantity).toLocaleString()}
+            </strong>
+          </div>
+        `;
+      }).join("")}
+
+      <div class="checkout-summary-total">
+        <span>Estimated Total</span>
+        <strong>$${getCartTotal().toLocaleString()}</strong>
+      </div>
+    </div>
+  `;
 
   canvas.innerHTML = `
     <div class="content-section">
@@ -433,9 +467,11 @@ function showCheckout() {
         </h2>
 
         <p class="section-copy">
-          This creates an email order request. Lester can confirm availability,
-          delivery, and payment details.
+          Review your order below, then send Lester an order request.
+          Lester will confirm availability, shipping, and send one secure Square invoice for payment.
         </p>
+
+        ${checkoutSummary}
 
         <form id="checkoutForm" class="checkout-form">
           <label>
@@ -458,7 +494,7 @@ function showCheckout() {
             <textarea
               name="notes"
               rows="4"
-              placeholder="Pickup, delivery questions, framing requests, etc."
+              placeholder="Pickup, delivery questions, requests, etc."
             ></textarea>
           </label>
 
@@ -467,7 +503,7 @@ function showCheckout() {
           </button>
         </form>
 
-        <p id="checkoutMessage" class="tool-output"></p>
+        <div id="checkoutMessage" class="tool-output"></div>
       </div>
     </div>
   `;
@@ -492,18 +528,91 @@ function showCheckout() {
       return;
     }
 
-    window.location.href = buildOrderEmail({
+    submitOrderRequest({
       name,
       email,
       zip,
-      notes
+      notes,
+      message
     });
 
     if (message) {
-      message.textContent = "Your email app should open with the order request.";
+      message.innerHTML = `
+        <div class="checkout-success">
+          <span class="success-check">✓</span>
+
+          <div>
+            <strong>Order Request Ready</strong>
+            <p>
+              Your email app should open with your artwork request.
+              Lester will follow up with availability and one Square payment invoice.
+            </p>
+          </div>
+        </div>
+      `;
     }
   });
 
   safeScrollTop();
 }
 /* /=== CHECKOUT END ===/ */
+
+/* /=== ORDER REQUEST SUBMIT START ===/ */
+async function submitOrderRequest({ name, email, zip, notes, message }) {
+  const orderDetails = buildOrderEmailBody({
+    name,
+    email,
+    zip,
+    notes
+  });
+
+  const formData = new FormData();
+
+  formData.append("Customer Name", name);
+  formData.append("Customer Email", email);
+  formData.append("Customer ZIP", zip);
+  formData.append("Customer Notes", notes || "None");
+  formData.append("Estimated Subtotal", `$${getCartTotal().toLocaleString()}`);
+  formData.append("Order Sheet", orderDetails);
+  formData.append("_subject", `New Painting With Lester Order - ${name}`);
+
+  try {
+    const response = await fetch(FORMSPREE_ENDPOINT, {
+      method: "POST",
+      body: formData,
+      headers: {
+        Accept: "application/json"
+      }
+    });
+
+    if (!response.ok) {
+      throw new Error("Formspree request failed.");
+    }
+
+    cart = [];
+    localStorage.removeItem(CART_STORAGE_KEY);
+    updateCartUI();
+
+    if (message) {
+      message.innerHTML = `
+        <div class="checkout-success">
+          <span class="success-check">✓</span>
+
+          <div>
+            <strong>Order Request Sent</strong>
+            <p>
+              Lester received your request. He will confirm availability,
+              shipping, and send one secure Square invoice for payment.
+            </p>
+          </div>
+        </div>
+      `;
+    }
+  } catch {
+    if (message) {
+      message.textContent =
+        "Something went wrong sending the order. Please try again or contact Lester directly.";
+    }
+  }
+}
+/* /=== ORDER REQUEST SUBMIT END ===/ */

@@ -3,11 +3,14 @@ Website for the Artist known as "Lester" a one of a kind creature from the plane
 
 👀 Watch Site Being Built As Changes Happen: https://geoffstengel.github.io/painting_with_lester_V1/
 
+🎨 Live Site: https://paintingwithlester.com
+
 🗺️ Site Map: ✅ index.html Is Main Landing Page
 
 ✅ style.css Is Your Styling Page It Gives Your Site Decorations (in css folder)
 
-✅ script.js Is Script For Functions to Make The Scheduler, Count Down etc.. (in js folder)
+✅ products.js is where you will add items like paintings & prints for sale
+
 💡 To Make The Site Yours Fully U Need The Code, 
 1. Download ZIP Folder From Green Code Button @ https://github.com/GeoffStengel/painting_with_lester_V1, 
 2. Make A Repository On Github In Your Account (Create Account If U Dont Have) 
