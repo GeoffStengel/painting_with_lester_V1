@@ -188,3 +188,27 @@ button {
   color: var(--yellow);
 }
 /* /=== TOP BAR END ===/ */
+
+
+/* /=== MAIN NAV START ===/ */
+.main-nav {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.main-nav button {
+  border: 0;
+  border-radius: 999px;
+  padding: 9px 13px;
+  background: rgba(255, 248, 236, .1);
+  color: var(--cream);
+  font-weight: 900;
+  font-size: .86rem;
+}
+
+.main-nav button:hover {
+  background: rgba(255, 248, 236, .22);
+}
+/* /=== MAIN NAV END ===/ */

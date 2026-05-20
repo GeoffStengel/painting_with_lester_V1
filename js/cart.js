@@ -11,21 +11,35 @@ function getCartCount() {
   return cart.reduce((count, item) => count + item.quantity, 0);
 }
 
+/* /=== ADD TO CART START ===/ */
 function addToCart(productId) {
   const product = getProduct(productId);
 
   if (!product || !product.available) return;
 
-  const existingItem = cart.find((item) => item.productId === productId);
+  const existingItem = cart.find(
+    (item) => item.productId === productId
+  );
+
+  const maxQty = product.maxQty || 99;
 
   if (existingItem) {
+    if (existingItem.quantity >= maxQty) {
+      alert(`Only ${maxQty} available for ${product.title}.`);
+      return;
+    }
+
     existingItem.quantity += 1;
   } else {
-    cart.push({ productId, quantity: 1 });
+    cart.push({
+      productId,
+      quantity: 1
+    });
   }
 
   updateCartUI();
 }
+/* /=== ADD TO CART END ===/ */
 
 function removeFromCart(productId) {
   cart = cart.filter((item) => item.productId !== productId);
@@ -33,30 +47,59 @@ function removeFromCart(productId) {
   showCart();
 }
 
+/* /=== UPDATE CART QUANTITY START ===/ */
 function updateCartQuantity(productId, quantity) {
   const parsedQuantity = Number(quantity);
 
-  if (!Number.isInteger(parsedQuantity) || parsedQuantity < 1) {
+  const item = cart.find(
+    (cartItem) => cartItem.productId === productId
+  );
+
+  const product = getProduct(productId);
+
+  if (!item || !product) return;
+
+  const maxQty = product.maxQty || 99;
+
+  if (
+    !Number.isInteger(parsedQuantity) ||
+    parsedQuantity < 1
+  ) {
     removeFromCart(productId);
     return;
   }
 
-  const item = cart.find((cartItem) => cartItem.productId === productId);
+  if (parsedQuantity > maxQty) {
+    item.quantity = maxQty;
 
-  if (!item) return;
+    alert(`Only ${maxQty} available for ${product.title}.`);
+  } else {
+    item.quantity = parsedQuantity;
+  }
 
-  item.quantity = parsedQuantity;
   updateCartUI();
   showCart();
 }
+/* /=== UPDATE CART QUANTITY END ===/ */
 
+/* /=== UPDATE CART UI START ===/ */
 function updateCartUI() {
   const count = getCartCount();
+  const total = getCartTotal();
 
-  document.querySelectorAll("#cartCount, .cart-count").forEach((element) => {
-    element.textContent = count;
-  });
+  document
+    .querySelectorAll("#cartCount, .cart-count, [data-cart-count]")
+    .forEach((element) => {
+      element.textContent = count;
+    });
+
+  document
+    .querySelectorAll("#cartTotalMini, .cart-total-mini, [data-cart-total]")
+    .forEach((element) => {
+      element.textContent = `$${total.toLocaleString()}`;
+    });
 }
+/* /=== UPDATE CART UI END ===/ */
 
 function buildOrderEmail({ name, email, zip, notes }) {
   const isLocal = LOCAL_DISCOUNT_ZIPS.includes(zip);

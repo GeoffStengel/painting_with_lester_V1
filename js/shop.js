@@ -130,9 +130,20 @@ function showProductDetail(productId) {
 
         <section class="product-detail-grid">
           <div class="detail-gallery">
-            <div class="detail-image-frame">
-              <img src="${product.image}" alt="${product.title}">
-            </div>
+<button
+  class="detail-image-frame detail-image-button"
+  type="button"
+  onclick="openGalleryLightbox(
+    '${product.image}',
+    '${product.title}',
+    '${product.type}',
+    '${product.size}',
+    'Available'
+  )"
+>
+  <img src="${product.image}" alt="${product.title}">
+  <span>Click to view full size</span>
+</button>
           </div>
 
           <div class="detail-info">

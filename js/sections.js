@@ -41,27 +41,73 @@ const sections = {
   /* /=== HOME SECTION TEMPLATE END ===/ */
 
 
-  /* /=== GALLERY SECTION TEMPLATE START ===/ */
-  gallery: () => `
+/* /=== GALLERY SECTION TEMPLATE START ===/ */
+gallery: () => {
+  const allGalleryItems = [
+    ...products.map((product) => ({
+      id: product.id,
+      title: product.title,
+      image: product.image,
+      medium: product.type,
+      size: product.size,
+      year: "Available"
+    })),
+
+    ...galleryArtwork.map((artwork) => ({
+      id: artwork.id,
+      title: artwork.title,
+      image: artwork.image,
+      medium: artwork.medium,
+      size: artwork.size,
+      year: artwork.year
+    }))
+  ];
+
+  return `
     <div class="content-section">
       <p class="eyebrow">Gallery</p>
-      <h2 class="section-heading">Featured Artwork</h2>
-      <p class="section-copy">A rotating look at Lester's originals and prints.</p>
+
+      <h2 class="section-heading">
+        Featured Artwork
+      </h2>
+
+      <p class="section-copy">
+        A rotating look at Lester's originals, prints, and studio work.
+      </p>
 
       <div class="gallery-grid">
-        ${products.map((product) => `
-          <article class="gallery-card" onclick="showProductDetail('${product.id}')">
-            <img src="${product.image}" alt="${product.title}">
+        ${allGalleryItems.map((artwork) => `
+          <article
+            class="gallery-card"
+            onclick="openGalleryLightbox(
+              '${artwork.image}',
+              '${artwork.title}',
+              '${artwork.medium}',
+              '${artwork.size}',
+              '${artwork.year}'
+            )"
+          >
+            <img
+              src="${artwork.image}"
+              alt="${artwork.title}"
+            >
+
             <div>
-              <span>${product.type}</span>
-              <h3>${product.title}</h3>
+              <span>${artwork.medium}</span>
+
+              <h3>${artwork.title}</h3>
+
+              <small>
+                ${artwork.size} • ${artwork.year}
+              </small>
             </div>
           </article>
         `).join("")}
       </div>
     </div>
-  `,
-  /* /=== GALLERY SECTION TEMPLATE END ===/ */
+  `;
+},
+/* /=== GALLERY SECTION TEMPLATE END ===/ */
 
 
   /* /=== SHOP SECTION TEMPLATE START ===/ */
@@ -254,10 +300,41 @@ const sections = {
         </a>
       </div>
     </div>
-  `
+  `,
   /* /=== SOCIALS SECTION TEMPLATE END ===/ */
 };
 /* /=== PAGE SECTION TEMPLATES END ===/ */
+
+/* /=== GALLERY LIGHTBOX START ===/ */
+function openGalleryLightbox(image, title, medium, size, year) {
+  const lightbox = document.createElement("div");
+
+  lightbox.className = "gallery-lightbox";
+  lightbox.innerHTML = `
+    <button class="gallery-lightbox-close" type="button" aria-label="Close full size image">×</button>
+
+    <div class="gallery-lightbox-inner">
+      <img src="${image}" alt="${title}">
+
+      <div class="gallery-lightbox-caption">
+        <h3>${title}</h3>
+        <p>${medium} • ${size} • ${year}</p>
+      </div>
+    </div>
+  `;
+
+  lightbox.addEventListener("click", (event) => {
+    if (
+      event.target === lightbox ||
+      event.target.classList.contains("gallery-lightbox-close")
+    ) {
+      lightbox.remove();
+    }
+  });
+
+  document.body.appendChild(lightbox);
+}
+/* /=== GALLERY LIGHTBOX END ===/ */
 
 
 /* /=== HOME COUNTS START ===/ */

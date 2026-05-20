@@ -41,11 +41,13 @@
         ☰
       </button>
 
-    <nav class="socials" id="socialMenu" aria-label="Social media links">
-      <a href="https://www.youtube.com/@PaintingWithLester" target="_blank" rel="noreferrer">YouTube</a>
-      <a href="https://tiktok.com/@lestermaurerthepainter" target="_blank" rel="noreferrer">TikTok</a>
-      <a href="https://www.instagram.com/lester.maurer" target="_blank" rel="noreferrer">Instagram</a>
-    </nav>
+<nav class="main-nav" id="mainNav" aria-label="Main navigation">
+  <button type="button" onclick="switchSection('shop')">Shop</button>
+  <button type="button" onclick="switchSection('gallery')">Gallery</button>
+  <button type="button" onclick="switchSection('tools')">Tools</button>
+  <button type="button" onclick="switchSection('about')">About</button>
+  <button type="button" onclick="switchSection('socials')">Socials</button>
+</nav>
     <!--Hamburger BTN END-->
     
     </div>
@@ -93,9 +95,14 @@
 <!-- /=== FLOATING CART START ===/ -->
 <button class="floating-cart" id="floatingCart" onclick="showCart()" type="button">
   <span>🛒</span>
+
   <div>
     <small>Cart</small>
-    <strong id="floatingCartCount">0</strong>
+    <strong
+      id="floatingCartCount"
+      class="cart-count"
+      data-cart-count
+    >0</strong>
   </div>
 </button>
 <!-- /=== FLOATING CART END ===/ -->

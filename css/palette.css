@@ -157,3 +157,95 @@
 .palette-svg-object:focus {
   outline: none;
 }
+
+
+/* /=== PALETTE WELL LABELS START ===/ */
+.palette-labels {
+  position: absolute;
+  inset: 0;
+  z-index: 6;
+  pointer-events: none;
+}
+
+.palette-well-label {
+  position: absolute;
+
+  transform: translate(-50%, -50%);
+
+  padding: 5px 9px;
+  border-radius: 999px;
+
+  background: rgba(16, 8, 6, .7);
+  color: white;
+
+  font-size: .62rem;
+  font-weight: 950;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  text-shadow: 0 1px 3px rgba(0,0,0,.8);
+
+  opacity: .9;
+
+  transition:
+    transform .28s ease,
+    opacity .28s ease,
+    background .28s ease,
+    box-shadow .28s ease;
+}
+
+.palette-well-label.is-pulsing {
+  transform: translate(-50%, calc(-50% - 9px)) scale(1.08);
+  opacity: 1;
+  background: linear-gradient(135deg, var(--yellow), var(--orange), var(--red));
+  box-shadow: 0 10px 24px rgba(230, 57, 70, .34);
+}
+
+/* adjust these if labels need nudging */
+.label-home {
+  left: 47%;
+  top: 22%;
+}
+
+.label-gallery {
+  left: 25%;
+  top: 42%;
+}
+
+.label-shop {
+  left: 72%;
+  top: 42%;
+}
+
+.label-tools {
+  left: 34%;
+  top: 66%;
+}
+
+.label-about {
+  left: 60%;
+  top: 68%;
+}
+
+.label-socials {
+  left: 52%;
+  top: 86%;
+}
+/* /=== PALETTE WELL LABELS END ===/ */
+
+
+/* /=== PALETTE BREATHING START ===/ */
+.main-palette.svg-palette {
+  animation: paletteBreath 4.6s ease-in-out infinite;
+}
+
+@keyframes paletteBreath {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.018);
+  }
+}
+/* /=== PALETTE BREATHING END ===/ */
