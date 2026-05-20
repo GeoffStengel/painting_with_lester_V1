@@ -1,0 +1,45 @@
+/* /=== MAIN LAYOUT START ===/ */
+.palette-stage {
+  min-height: calc(100svh - 74px);
+}
+
+.studio-layout {
+  display: grid;
+  grid-template-columns: 340px minmax(0, 1fr);
+  min-height: calc(100svh - 74px);
+}
+
+.canvas-wrap {
+  grid-column: 2;
+  min-width: 0;
+}
+
+.content-canvas {
+  min-height: calc(100svh - 74px);
+  color: var(--ink);
+  overflow: hidden;
+}
+/* /=== MAIN LAYOUT END ===/ */
+
+
+/* /=== PAGE ANIMATION START ===/ */
+.canvas-section {
+  position: relative;
+  z-index: 2;
+  animation: paintIn .48s cubic-bezier(.16, 1, .3, 1) both;
+}
+
+@keyframes paintIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px) rotate(-1deg);
+    filter: blur(8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) rotate(0);
+    filter: blur(0);
+  }
+}
+/* /=== PAGE ANIMATION END ===/ */

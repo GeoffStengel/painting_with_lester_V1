@@ -1,0 +1,222 @@
+const sections = {
+  home: () => `
+    <div class="content-section home-section">
+      <div class="home-hero">
+        <p class="eyebrow">Painting with Lester</p>
+        <h1>Colorful originals, expressive prints, and creative tools.</h1>
+        <p class="section-copy">
+          Explore Lester's artwork, shop available pieces, or play with artist tools made for collectors and creatives.
+        </p>
+
+        <div class="home-actions">
+          <button class="btn btn-primary" onclick="switchSection('shop')">Shop the Collection</button>
+          <button class="btn btn-dark" onclick="switchSection('gallery')">View Gallery</button>
+        </div>
+
+        <div class="home-stats">
+          <button class="home-stat-card" onclick="openShopCategory('original')">
+            <strong id="originalCount">00</strong>
+            <span>Originals</span>
+          </button>
+
+          <button class="home-stat-card" onclick="openShopCategory('print')">
+            <strong id="printCount">00</strong>
+            <span>Prints</span>
+          </button>
+
+          <button class="home-stat-card" onclick="switchSection('tools')">
+            <strong>03</strong>
+            <span>Artist Tools</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="home-art-window">
+        <img src="${products[0].image}" alt="${products[0].title}">
+      </div>
+    </div>
+  `,
+
+  gallery: () => `
+    <div class="content-section">
+      <p class="eyebrow">Gallery</p>
+      <h2 class="section-heading">Featured Artwork</h2>
+      <p class="section-copy">A rotating look at Lester's originals and prints.</p>
+
+      <div class="gallery-grid">
+        ${products.map((product) => `
+          <article class="gallery-card" onclick="showProductDetail('${product.id}')">
+            <img src="${product.image}" alt="${product.title}">
+            <div>
+              <span>${product.type}</span>
+              <h3>${product.title}</h3>
+            </div>
+          </article>
+        `).join("")}
+      </div>
+    </div>
+  `,
+
+  shop: () => `
+    <div class="content-section">
+      <div class="section-topline">
+        <div>
+          <p class="eyebrow">Shop</p>
+          <h2 class="section-heading">Available Work</h2>
+        </div>
+
+        <button class="cart-button" onclick="showCart()">
+          Cart <span id="cartCount">0</span>
+        </button>
+      </div>
+
+      <div class="shop-filters">
+        <button class="filter-btn" data-filter="all">All</button>
+        <button class="filter-btn" data-filter="original">Originals</button>
+        <button class="filter-btn" data-filter="print">Prints</button>
+      </div>
+
+      <div class="shop-grid" id="shopGrid"></div>
+    </div>
+  `,
+
+  /* /=== TOOLS SECTION TEMPLATE START ===/ */
+  tools: () => `
+    <div class="content-section">
+      <p class="eyebrow">Artist Tools</p>
+      <h2 class="section-heading">Creative Playground</h2>
+      <p class="section-copy">
+        Quick tools for color inspiration, canvas ratios, and painting prompts.
+      </p>
+
+      <div class="tools-grid">
+        <section class="tool-card palette-tool-card">
+          <h3>Color Palette Generator</h3>
+
+          <div class="palette-controls">
+            <label>
+              Base Color
+              <input id="baseColor" type="color" value="#37ACE6">
+            </label>
+
+            <label>
+              Harmony
+              <select id="paletteMode">
+                <option value="analogous">Analogous</option>
+                <option value="monochromatic">Monochromatic</option>
+                <option value="complementary">Complementary</option>
+                <option value="split">Split Complementary</option>
+                <option value="triadic">Triadic</option>
+                <option value="tetradic">Tetradic</option>
+                <option value="primary">Primary Colors</option>
+                <option value="secondary">Secondary Colors</option>
+                <option value="warm">Warm Colors</option>
+                <option value="cool">Cool Colors</option>
+                <option value="grayscale">Grayscale</option>
+              </select>
+            </label>
+          </div>
+
+          <button class="btn btn-primary" onclick="generatePalette()">
+            Generate Palette
+          </button>
+
+          <div class="generated-palette" id="generatedPalette"></div>
+        </section>
+
+        <section class="tool-card">
+          <h3>Canvas Ratio Helper</h3>
+
+          <div class="input-row">
+            <input id="ratioWidth" type="number" placeholder="Width">
+            <input id="ratioHeight" type="number" placeholder="Height">
+          </div>
+
+          <button class="btn btn-dark" onclick="calculateRatio()">
+            Simplify Ratio
+          </button>
+
+          <p id="ratioOutput" class="tool-output"></p>
+        </section>
+
+        <section class="tool-card">
+          <h3>Painting Prompt</h3>
+
+          <button class="btn btn-primary" onclick="generatePrompt()">
+            New Prompt
+          </button>
+
+          <p id="promptOutput" class="tool-output"></p>
+        </section>
+
+        <section class="tool-card sketch-tool">
+          <h3>Mini Sketch Pad</h3>
+
+          <canvas id="sketchCanvas" width="500" height="320"></canvas>
+
+          <div class="sketch-controls">
+            <input type="color" id="brushColor" value="#37ACE6">
+            <button id="thinBrush" class="btn btn-dark" type="button">Thin</button>
+            <button id="thickBrush" class="btn btn-dark" type="button">Thick</button>
+            <button id="clearCanvas" class="btn btn-primary" type="button">Clear</button>
+          </div>
+        </section>
+      </div>
+    </div>
+  `,
+  /* /=== TOOLS SECTION TEMPLATE END ===/ */
+
+  about: () => `
+    <div class="content-section about-section">
+      <p class="eyebrow">About</p>
+      <h2 class="section-heading">Meet Lester</h2>
+      <p class="section-copy">
+        Lester creates expressive paintings filled with movement, color, and story.
+        This shop brings originals, prints, and creative tools together in one playful collector-friendly space.
+      </p>
+
+      <div class="about-card">
+        <p>Use this section later for a full artist bio, studio photos, process videos, testimonials, and upcoming shows.</p>
+      </div>
+    </div>
+  `,
+
+  socials: () => `
+    <div class="content-section">
+      <p class="eyebrow">Socials</p>
+      <h2 class="section-heading">Follow the Paint Trail</h2>
+      <p class="section-copy">Connect with Lester online.</p>
+
+      <div class="social-grid">
+        <a class="social-card" href="https://www.facebook.com/share/1D2u9ogUT1/?mibextid=wwXIfr" target="_blank" rel="noreferrer">
+          <span class="emoji">👍</span>
+          <strong>Facebook</strong>
+          <p class="section-copy">Studio news and collector updates.</p>
+        </a>
+
+        <a class="social-card" href="https://youtube.com/@maurerstudio?si=ynjCpVtCo7f8jU31" target="_blank" rel="noreferrer">
+          <span class="emoji">▶️</span>
+          <strong>YouTube</strong>
+          <p class="section-copy">Videos, process, and painting moments.</p>
+        </a>
+
+        <a class="social-card" href="https://www.instagram.com/lester.maurer" target="_blank" rel="noreferrer">
+          <span class="emoji">📸</span>
+          <strong>Instagram</strong>
+          <p class="section-copy">Daily art and updates.</p>
+        </a>
+      </div>
+    </div>
+  `
+};
+
+function updateHomeCounts() {
+  const originals = products.filter((product) => product.category === "original").length;
+  const prints = products.filter((product) => product.category === "print").length;
+
+  const originalEl = document.querySelector("#originalCount");
+  const printEl = document.querySelector("#printCount");
+
+  if (originalEl) originalEl.textContent = String(originals).padStart(2, "0");
+  if (printEl) printEl.textContent = String(prints).padStart(2, "0");
+}

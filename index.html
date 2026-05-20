@@ -9,7 +9,14 @@
   <!-- /=== META END ===/ -->
 
   <!-- /=== CSS START ===/ -->
-  <link rel="stylesheet" href="css/style.css" />
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/layout.css">
+<link rel="stylesheet" href="css/palette.css">
+<link rel="stylesheet" href="css/sections.css">
+<link rel="stylesheet" href="css/shop.css">
+<link rel="stylesheet" href="css/tools.css">
+<link rel="stylesheet" href="css/cart.css">
+<link rel="stylesheet" href="css/responsive.css">
   <!-- /=== CSS END ===/ -->
 
 
@@ -51,33 +58,17 @@
 
 <!-- /=== PALETTE SIDEBAR START ===/ -->
 <aside class="palette-column" aria-label="Interactive paint palette navigation">
-  <div class="main-palette" id="mainPalette">
-    <button class="paint-well well-home active" data-section="home" aria-label="Home">
-      <span>🏠</span><small>Home</small>
-    </button>
+<div class="main-palette svg-palette" id="mainPalette">
+  <object
+    id="paletteSvg"
+    class="palette-svg-object"
+    type="image/svg+xml"
+    data="assets/paint_palette_svg_06_labels.svg"
+    aria-label="Interactive paint palette navigation"
+  ></object>
 
-    <button class="paint-well well-gallery" data-section="gallery" aria-label="Gallery">
-      <span>🖼️</span><small>Gallery</small>
-    </button>
-
-    <button class="paint-well well-shop" data-section="shop" aria-label="Shop">
-      <span>🛒</span><small>Shop</small>
-    </button>
-
-    <button class="paint-well well-tools" data-section="tools" aria-label="Tools">
-      <span>🛠️</span><small>Tools</small>
-    </button>
-
-    <button class="paint-well well-about" data-section="about" aria-label="About">
-      <span>👤</span><small>About</small>
-    </button>
-
-    <button class="paint-well well-socials" data-section="socials" aria-label="Socials">
-      <span>📣</span><small>Socials</small>
-    </button>
-
-    <div class="palette-center-logo">PWL</div>
-  </div>
+  <div id="paletteTooltip" class="palette-tooltip" aria-hidden="true"></div>
+</div>
 
   <div class="sidebar-stats">
     <div><span>Originals</span><strong>Ship</strong></div>
@@ -111,7 +102,13 @@
 
 
   <!-- /=== JAVASCRIPT START ===/ -->
-  <script src="js/script.js"></script>
+<script src="js/products.js"></script>
+<script src="js/cart.js"></script>
+<script src="js/tools.js"></script>
+<script src="js/sections.js"></script>
+<script src="js/shop.js"></script>
+<script src="js/palette.js"></script>
+<script src="js/script.js"></script>
   <!-- /=== JAVASCRIPT END ===/ -->
 </body>
 </html>

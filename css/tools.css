@@ -1,0 +1,193 @@
+/* /=== TOOLS SECTION START ===/ */
+.tools-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(260px, 1fr));
+  gap: 22px;
+  margin-top: 28px;
+}
+
+.tool-card {
+  padding: 24px;
+  border-radius: 28px;
+
+  background: rgba(255, 255, 255, .58);
+  border: 1px solid rgba(80, 45, 12, .1);
+
+  box-shadow: 0 16px 36px rgba(80, 45, 12, .1);
+}
+
+.tool-card h3 {
+  margin: 0 0 18px;
+  font-size: 1.35rem;
+  color: var(--ink);
+}
+
+.tool-output {
+  margin-top: 16px;
+  color: rgba(32, 21, 16, .74);
+  line-height: 1.7;
+}
+
+.input-row,
+.sketch-controls,
+.detail-actions,
+.product-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.input-row input {
+  flex: 1;
+  min-width: 120px;
+
+  border: 1px solid rgba(80, 45, 12, .18);
+  border-radius: 14px;
+
+  padding: 13px 14px;
+
+  background: rgba(255, 255, 255, .8);
+  color: var(--ink);
+
+  font: inherit;
+}
+/* /=== TOOLS SECTION END ===/ */
+
+
+/* /=== COLOR PALETTE GENERATOR START ===/ */
+.generated-palette {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 10px;
+  margin-top: 18px;
+}
+
+.color-chip {
+  position: relative;
+
+  min-height: 92px;
+
+  border: 0;
+  border-radius: 18px;
+
+  overflow: hidden;
+  cursor: pointer;
+
+  transition: transform .18s ease, box-shadow .18s ease;
+}
+
+.color-chip:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, .18);
+}
+
+.color-chip span {
+  position: absolute;
+  inset: auto 0 0;
+
+  padding: 6px;
+
+  background: rgba(255, 255, 255, .76);
+
+  font-size: .65rem;
+  font-weight: 800;
+  text-align: center;
+
+  color: var(--ink);
+}
+/* /=== COLOR PALETTE GENERATOR END ===/ */
+
+
+/* /=== SKETCH PAD START ===/ */
+.sketch-tool {
+  grid-column: 1 / -1;
+}
+
+#sketchCanvas {
+  width: 100%;
+  min-height: 320px;
+
+  margin-top: 18px;
+
+  border-radius: 22px;
+
+  background: #ffffff;
+
+  border: 1px solid rgba(80, 45, 12, .18);
+
+  box-shadow:
+    inset 0 1px 4px rgba(0,0,0,.04),
+    0 12px 28px rgba(80,45,12,.08);
+
+  touch-action: none;
+}
+
+.sketch-controls {
+  margin-top: 18px;
+}
+
+.sketch-controls input[type="color"] {
+  width: 52px;
+  height: 52px;
+
+  padding: 0;
+
+  border: 0;
+  border-radius: 14px;
+
+  overflow: hidden;
+  background: transparent;
+
+  cursor: pointer;
+}
+/* /=== SKETCH PAD END ===/ */
+
+/*/======palette hex end=========/*/
+.palette-controls {
+  display: grid;
+  grid-template-columns: 140px minmax(180px, 1fr);
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.palette-controls label {
+  display: grid;
+  gap: 7px;
+  font-size: .76rem;
+  font-weight: 950;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+.palette-controls input,
+.palette-controls select {
+  width: 100%;
+  height: 48px;
+  border: 1px solid rgba(80, 45, 12, .18);
+  border-radius: 14px;
+  padding: 8px 10px;
+  background: rgba(255, 255, 255, .82);
+  color: var(--ink);
+  font: inherit;
+}
+
+.palette-controls input[type="color"] {
+  padding: 4px;
+}
+
+.color-chip span {
+  display: grid;
+  gap: 2px;
+}
+
+.color-chip strong {
+  font-size: .76rem;
+}
+
+.color-chip small {
+  font-size: .58rem;
+  opacity: .78;
+}
+
+/*/======palette hex end=========/*/
