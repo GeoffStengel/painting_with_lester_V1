@@ -50,7 +50,13 @@ function initShop() {
           <span>${product.type}</span>
           <h3>${product.title}</h3>
           <p>${product.size}</p>
-          <strong>$${product.price.toLocaleString()}</strong>
+          <p class="product-availability">
+  ${
+    product.printOptions?.length
+      ? "Multiple print sizes available"
+      : "Original artwork available"
+  }
+</p>
 
           <div class="product-actions">
             <button
