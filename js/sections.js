@@ -1,4 +1,6 @@
+/* /=== PAGE SECTION TEMPLATES START ===/ */
 const sections = {
+  /* /=== HOME SECTION TEMPLATE START ===/ */
   home: () => `
     <div class="content-section home-section">
       <div class="home-hero">
@@ -36,7 +38,10 @@ const sections = {
       </div>
     </div>
   `,
+  /* /=== HOME SECTION TEMPLATE END ===/ */
 
+
+  /* /=== GALLERY SECTION TEMPLATE START ===/ */
   gallery: () => `
     <div class="content-section">
       <p class="eyebrow">Gallery</p>
@@ -56,7 +61,10 @@ const sections = {
       </div>
     </div>
   `,
+  /* /=== GALLERY SECTION TEMPLATE END ===/ */
 
+
+  /* /=== SHOP SECTION TEMPLATE START ===/ */
   shop: () => `
     <div class="content-section">
       <div class="section-topline">
@@ -79,6 +87,8 @@ const sections = {
       <div class="shop-grid" id="shopGrid"></div>
     </div>
   `,
+  /* /=== SHOP SECTION TEMPLATE END ===/ */
+
 
   /* /=== TOOLS SECTION TEMPLATE START ===/ */
   tools: () => `
@@ -90,6 +100,7 @@ const sections = {
       </p>
 
       <div class="tools-grid">
+        <!-- /=== COLOR PALETTE GENERATOR START ===/ -->
         <section class="tool-card palette-tool-card">
           <h3>Color Palette Generator</h3>
 
@@ -123,22 +134,49 @@ const sections = {
 
           <div class="generated-palette" id="generatedPalette"></div>
         </section>
+        <!-- /=== COLOR PALETTE GENERATOR END ===/ -->
 
-        <section class="tool-card">
+
+        <!-- /=== CANVAS RATIO HELPER START ===/ -->
+        <section class="tool-card ratio-tool-card">
           <h3>Canvas Ratio Helper</h3>
 
+          <p class="tool-hint">
+            Enter a canvas size to simplify the ratio, preview the shape, and find common matching sizes.
+          </p>
+
           <div class="input-row">
-            <input id="ratioWidth" type="number" placeholder="Width">
-            <input id="ratioHeight" type="number" placeholder="Height">
+            <label>
+              Width
+              <input id="ratioWidth" type="number" min="1" value="24" placeholder="24">
+            </label>
+
+            <label>
+              Height
+              <input id="ratioHeight" type="number" min="1" value="36" placeholder="36">
+            </label>
           </div>
 
           <button class="btn btn-dark" onclick="calculateRatio()">
-            Simplify Ratio
+            Analyze Canvas
           </button>
 
-          <p id="ratioOutput" class="tool-output"></p>
-        </section>
+          <div class="ratio-results" id="ratioResults" hidden>
+            <div class="ratio-preview-wrap">
+              <div class="ratio-preview" id="ratioPreview"></div>
+            </div>
 
+            <div class="ratio-info">
+              <p id="ratioOutput" class="tool-output"></p>
+              <p id="orientationOutput" class="tool-output"></p>
+              <p id="matchesOutput" class="tool-output"></p>
+            </div>
+          </div>
+        </section>
+        <!-- /=== CANVAS RATIO HELPER END ===/ -->
+
+
+        <!-- /=== PAINTING PROMPT GENERATOR START ===/ -->
         <section class="tool-card">
           <h3>Painting Prompt</h3>
 
@@ -148,7 +186,10 @@ const sections = {
 
           <p id="promptOutput" class="tool-output"></p>
         </section>
+        <!-- /=== PAINTING PROMPT GENERATOR END ===/ -->
 
+
+        <!-- /=== MINI SKETCH PAD START ===/ -->
         <section class="tool-card sketch-tool">
           <h3>Mini Sketch Pad</h3>
 
@@ -161,11 +202,14 @@ const sections = {
             <button id="clearCanvas" class="btn btn-primary" type="button">Clear</button>
           </div>
         </section>
+        <!-- /=== MINI SKETCH PAD END ===/ -->
       </div>
     </div>
   `,
   /* /=== TOOLS SECTION TEMPLATE END ===/ */
 
+
+  /* /=== ABOUT SECTION TEMPLATE START ===/ */
   about: () => `
     <div class="content-section about-section">
       <p class="eyebrow">About</p>
@@ -180,7 +224,10 @@ const sections = {
       </div>
     </div>
   `,
+  /* /=== ABOUT SECTION TEMPLATE END ===/ */
 
+
+  /* /=== SOCIALS SECTION TEMPLATE START ===/ */
   socials: () => `
     <div class="content-section">
       <p class="eyebrow">Socials</p>
@@ -208,8 +255,12 @@ const sections = {
       </div>
     </div>
   `
+  /* /=== SOCIALS SECTION TEMPLATE END ===/ */
 };
+/* /=== PAGE SECTION TEMPLATES END ===/ */
 
+
+/* /=== HOME COUNTS START ===/ */
 function updateHomeCounts() {
   const originals = products.filter((product) => product.category === "original").length;
   const prints = products.filter((product) => product.category === "print").length;
@@ -220,3 +271,4 @@ function updateHomeCounts() {
   if (originalEl) originalEl.textContent = String(originals).padStart(2, "0");
   if (printEl) printEl.textContent = String(prints).padStart(2, "0");
 }
+/* /=== HOME COUNTS END ===/ */

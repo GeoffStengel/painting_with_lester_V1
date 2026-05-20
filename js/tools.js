@@ -1,7 +1,18 @@
+/* /=== TOOLS PAGE INIT START ===/ */
 function initTools() {
   initSketchCanvas();
   generatePalette();
 }
+/* /=== TOOLS PAGE INIT END ===/ */
+
+
+/* /=== COLOR PALETTE GENERATOR START ===/ */
+/*
+  Future ideas:
+  - Add "save palette" to localStorage
+  - Add downloadable ASE/Adobe Swatch support later
+  - Add color contrast checker for accessibility
+*/
 
 function hexToHsl(hex) {
   let r = parseInt(hex.slice(1, 3), 16) / 255;
@@ -10,17 +21,21 @@ function hexToHsl(hex) {
 
   const max = Math.max(r, g, b);
   const min = Math.min(r, g, b);
+
   let h = 0;
   let s = 0;
   const l = (max + min) / 2;
 
   if (max !== min) {
     const delta = max - min;
-    s = l > .5 ? delta / (2 - max - min) : delta / (max + min);
 
-    if (max === r) h = ((g - b) / delta + (g < b ? 6 : 0));
-    if (max === g) h = ((b - r) / delta + 2);
-    if (max === b) h = ((r - g) / delta + 4);
+    s = l > .5
+      ? delta / (2 - max - min)
+      : delta / (max + min);
+
+    if (max === r) h = (g - b) / delta + (g < b ? 6 : 0);
+    if (max === g) h = (b - r) / delta + 2;
+    if (max === b) h = (r - g) / delta + 4;
 
     h *= 60;
   }
@@ -68,6 +83,14 @@ function buildPaletteColors(baseHex, mode) {
   const base = hexToHsl(baseHex);
 
   const palettes = {
+    analogous: [
+      [rotateHue(base.h, -40), base.s, 52],
+      [rotateHue(base.h, -20), base.s, 56],
+      [base.h, base.s, base.l],
+      [rotateHue(base.h, 20), base.s, 56],
+      [rotateHue(base.h, 40), base.s, 52]
+    ],
+
     monochromatic: [
       [base.h, base.s, 25],
       [base.h, base.s, 38],
@@ -75,6 +98,7 @@ function buildPaletteColors(baseHex, mode) {
       [base.h, base.s, 64],
       [base.h, base.s, 78]
     ],
+
     complementary: [
       [base.h, base.s, 42],
       [base.h, base.s, 58],
@@ -82,6 +106,7 @@ function buildPaletteColors(baseHex, mode) {
       [rotateHue(base.h, 180), base.s, 58],
       [base.h, 20, 88]
     ],
+
     split: [
       [base.h, base.s, 52],
       [rotateHue(base.h, 150), base.s, 50],
@@ -89,6 +114,7 @@ function buildPaletteColors(baseHex, mode) {
       [rotateHue(base.h, 150), 70, 72],
       [rotateHue(base.h, 210), 70, 72]
     ],
+
     triadic: [
       [base.h, base.s, 52],
       [rotateHue(base.h, 120), base.s, 52],
@@ -96,6 +122,7 @@ function buildPaletteColors(baseHex, mode) {
       [base.h, 50, 78],
       [rotateHue(base.h, 120), 50, 78]
     ],
+
     tetradic: [
       [base.h, base.s, 50],
       [rotateHue(base.h, 90), base.s, 50],
@@ -103,6 +130,7 @@ function buildPaletteColors(baseHex, mode) {
       [rotateHue(base.h, 270), base.s, 50],
       [base.h, 25, 86]
     ],
+
     primary: [
       [0, 85, 55],
       [55, 95, 55],
@@ -110,6 +138,7 @@ function buildPaletteColors(baseHex, mode) {
       [0, 55, 78],
       [220, 55, 78]
     ],
+
     secondary: [
       [28, 90, 55],
       [125, 65, 45],
@@ -117,6 +146,7 @@ function buildPaletteColors(baseHex, mode) {
       [28, 70, 78],
       [280, 55, 78]
     ],
+
     warm: [
       [0, 80, 55],
       [18, 90, 55],
@@ -124,6 +154,7 @@ function buildPaletteColors(baseHex, mode) {
       [50, 95, 60],
       [340, 80, 58]
     ],
+
     cool: [
       [175, 70, 45],
       [200, 80, 50],
@@ -131,19 +162,13 @@ function buildPaletteColors(baseHex, mode) {
       [260, 70, 60],
       [285, 65, 62]
     ],
+
     grayscale: [
       [base.h, 0, 18],
       [base.h, 0, 34],
       [base.h, 0, 50],
       [base.h, 0, 68],
       [base.h, 0, 86]
-    ],
-    analogous: [
-      [rotateHue(base.h, -40), base.s, 52],
-      [rotateHue(base.h, -20), base.s, 56],
-      [base.h, base.s, base.l],
-      [rotateHue(base.h, 20), base.s, 56],
-      [rotateHue(base.h, 40), base.s, 52]
     ]
   };
 
@@ -183,40 +208,157 @@ function generatePalette() {
     </button>
   `).join("");
 }
+/* /=== COLOR PALETTE GENERATOR END ===/ */
+
+
+/* /=== CANVAS RATIO HELPER START ===/ */
+/*
+  Future ideas:
+  - Add inches/cm toggle
+  - Add print size recommendations
+  - Add frame/mat size suggestions
+  - Add "scale this canvas up/down" feature
+*/
 
 function gcd(a, b) {
   return b === 0 ? a : gcd(b, a % b);
 }
 
+function getOrientation(width, height) {
+  if (width === height) return "Square";
+  return width > height ? "Landscape" : "Portrait";
+}
+
+function getCommonCanvasMatches(width, height) {
+  const commonSizes = [
+    [5, 7],
+    [8, 10],
+    [9, 12],
+    [11, 14],
+    [12, 16],
+    [16, 20],
+    [18, 24],
+    [20, 24],
+    [20, 30],
+    [24, 30],
+    [24, 36],
+    [30, 40],
+    [36, 48],
+    [40, 60]
+  ];
+
+  const divisor = gcd(width, height);
+  const simpleW = width / divisor;
+  const simpleH = height / divisor;
+
+  return commonSizes.filter(([w, h]) => {
+    const sizeDivisor = gcd(w, h);
+
+    return w / sizeDivisor === simpleW && h / sizeDivisor === simpleH;
+  });
+}
+
 function calculateRatio() {
   const width = Number(document.querySelector("#ratioWidth")?.value);
   const height = Number(document.querySelector("#ratioHeight")?.value);
-  const output = document.querySelector("#ratioOutput");
 
-  if (!output) return;
+  const results = document.querySelector("#ratioResults");
+  const preview = document.querySelector("#ratioPreview");
+  const ratioOutput = document.querySelector("#ratioOutput");
+  const orientationOutput = document.querySelector("#orientationOutput");
+  const matchesOutput = document.querySelector("#matchesOutput");
+
+  if (!results || !preview || !ratioOutput || !orientationOutput || !matchesOutput) return;
 
   if (!width || !height || width <= 0 || height <= 0) {
-    output.textContent = "Enter a valid width and height.";
+    results.hidden = false;
+    preview.style.aspectRatio = "1 / 1";
+    preview.textContent = "?";
+    ratioOutput.textContent = "Enter a valid width and height.";
+    orientationOutput.textContent = "";
+    matchesOutput.textContent = "";
     return;
   }
 
   const divisor = gcd(width, height);
-  output.textContent = `Simplified ratio: ${width / divisor}:${height / divisor}`;
+  const simplifiedWidth = width / divisor;
+  const simplifiedHeight = height / divisor;
+  const orientation = getOrientation(width, height);
+  const matches = getCommonCanvasMatches(width, height);
+
+  preview.style.aspectRatio = `${width} / ${height}`;
+  preview.textContent = `${width} × ${height}`;
+
+  ratioOutput.textContent = `Simplified ratio: ${simplifiedWidth}:${simplifiedHeight}`;
+  orientationOutput.textContent = `Orientation: ${orientation}`;
+
+  matchesOutput.textContent = matches.length
+    ? `Common matching sizes: ${matches.map(([w, h]) => `${w}×${h}`).join(", ")}`
+    : "No exact common size matches found. Custom size vibes.";
+
+  results.hidden = false;
 }
+/* /=== CANVAS RATIO HELPER END ===/ */
+
+
+/* /=== PAINTING PROMPT GENERATOR START ===/ */
+/*
+  Future ideas:
+  - Add mood selector
+  - Add subject selector
+  - Add difficulty levels
+  - Add "copy prompt" button
+*/
 
 function generatePrompt() {
   const output = document.querySelector("#promptOutput");
 
   if (!output) return;
 
-  const moods = ["quiet", "electric", "neighborhood", "sun-soaked", "stormy", "joyful", "cinematic"];
-  const subjects = ["alleyway", "porch light", "flower market", "city window", "old doorway", "jazz musician", "corner store"];
-  const styles = ["with thick texture", "using only three colors", "as a dream scene", "with wild brush strokes", "in golden-hour light", "with one neon surprise"];
+  const moods = [
+    "quiet",
+    "electric",
+    "neighborhood",
+    "sun-soaked",
+    "stormy",
+    "joyful",
+    "cinematic"
+  ];
+
+  const subjects = [
+    "alleyway",
+    "porch light",
+    "flower market",
+    "city window",
+    "old doorway",
+    "jazz musician",
+    "corner store"
+  ];
+
+  const styles = [
+    "with thick texture",
+    "using only three colors",
+    "as a dream scene",
+    "with wild brush strokes",
+    "in golden-hour light",
+    "with one neon surprise"
+  ];
 
   const pick = (list) => list[Math.floor(Math.random() * list.length)];
 
   output.textContent = `Paint a ${pick(moods)} ${pick(subjects)} ${pick(styles)}.`;
 }
+/* /=== PAINTING PROMPT GENERATOR END ===/ */
+
+
+/* /=== MINI SKETCH PAD START ===/ */
+/*
+  Future ideas:
+  - Add eraser mode
+  - Add undo button
+  - Add save/download sketch
+  - Add brush size slider
+*/
 
 function initSketchCanvas() {
   const canvas = document.querySelector("#sketchCanvas");
@@ -299,3 +441,4 @@ function initSketchCanvas() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
   });
 }
+/* /=== MINI SKETCH PAD END ===/ */

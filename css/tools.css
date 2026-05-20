@@ -191,3 +191,72 @@
 }
 
 /*/======palette hex end=========/*/
+
+/* /=== CANVAS RATIO HELPER START ===/ */
+.tool-hint {
+  margin: -6px 0 18px;
+  color: rgba(32, 21, 16, .68);
+  line-height: 1.6;
+}
+
+.input-row label {
+  display: grid;
+  flex: 1;
+  min-width: 120px;
+  gap: 7px;
+
+  font-size: .76rem;
+  font-weight: 950;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+.ratio-results {
+  display: grid;
+  grid-template-columns: 180px minmax(0, 1fr);
+  gap: 18px;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.ratio-preview-wrap {
+  display: grid;
+  place-items: center;
+
+  min-height: 180px;
+  padding: 16px;
+
+  border-radius: 22px;
+  background:
+    linear-gradient(135deg, rgba(255,255,255,.5), rgba(255,255,255,.18));
+  border: 1px dashed rgba(80, 45, 12, .22);
+}
+
+.ratio-preview {
+  display: grid;
+  place-items: center;
+
+  width: min(100%, 140px);
+  max-height: 140px;
+
+  border-radius: 12px;
+  background:
+    linear-gradient(135deg, rgba(252,191,73,.55), rgba(230,57,70,.45));
+  border: 2px solid rgba(80, 45, 12, .35);
+
+  color: var(--ink);
+  font-size: .78rem;
+  font-weight: 950;
+
+  box-shadow: 0 12px 24px rgba(80,45,12,.16);
+}
+
+.ratio-info {
+  display: grid;
+  gap: 8px;
+}
+
+.ratio-info .tool-output {
+  margin: 0;
+}
+/* /=== CANVAS RATIO HELPER END ===/ */
