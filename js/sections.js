@@ -279,7 +279,21 @@ gallery: () => {
       </p>
 
       <div class="about-card">
-        <p>Use this section later for a full artist bio, studio photos, process videos, testimonials, and upcoming shows.</p>
+        <p>The artist grew up surrounded by the masterpieces within the Brandywine River Museum. With his mother working there, all major family events and Christmas parties were celebrated there. The artist’s childhood familiarity with the world’s greatest collection of the Wyeth family (N.C. Wyeth, Andrew Wyeth, and Jamie Wyeth) paintings nourish his work. Since early youth, the artist excelled in drawing.
+
+
+The artist studied art at the Pima Community College in Tucson, AZ for three years before traveling throughout Europe where he was influenced by the architecture, sculpture, and paintings of Italy, Germany, Netherlands, Spain, and England. Still very young (23), the artist moved to Eugene, Oregon and found his true artistic muse. Energized by the progressive, yet offbeat community of Eugene, he painted dozens of plein air oil paintings of his community and the surrounding area. He began using soft pastels to paint live performances like poetry slams and concerts and then found himself sought after to ‘perform’ as an artist at a large array of venues, from festivals to social events, from Seattle to Tucson.
+
+
+After the COVID pandemic Lester created a series of portraits he called the Faces of Eugene series with acrylic paint. “Its been too long since we have seen each other’s faces.” In this series the artist captures from life portraits of his community members in Eugene. Often taking 4-6 hours to complete portraits with good company and conversation. The Artist capturing dozens of portraits to bring life back to normal with in his community.
+
+Lester continues to experiment with the acrylic medium playing with using a broom as a brush the Artist worked on a series of paintings on recycled pallet liner board.
+
+
+In the beginning of 2026 the artist created a YouTube art show. following the wake of two ICE executions of American citizens. The show “Painting With Lester”. Created with the intent to show the world that people who disagree with the ICE crackdown are regular folks. A message contrary to what media has suggested. “It’s a shame that good people with good intent be slandered as a enemy figure.”
+
+
+This artist believes that capturing a moment within that moment (single live session) makes his work stand out as pure in the expression of the human experience.</p>
       </div>
     </div>
   `,

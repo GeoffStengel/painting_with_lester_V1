@@ -111,6 +111,8 @@ function initMobileMenu() {
 /* /=== APP INIT START ===/ */
 initMobileMenu();
 initSvgPalette();
+initPaletteAnimations();
+animatePaletteWells();
 switchSection("shop");
 updateCartUI();
 updateHomeCounts();
